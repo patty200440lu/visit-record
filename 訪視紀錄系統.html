@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訪視紀錄管理系統</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif; background: #f0f2f5; color: #333; }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white; padding: 22px 30px;
+        }
+        .header h1 { font-size: 22px; }
+        .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+
+        .nav {
+            background: white; border-bottom: 1px solid #dde3f0;
+            display: flex; padding: 0 30px; position: sticky; top: 0; z-index: 100;
+        }
+        .nav-btn {
+            padding: 14px 24px; border: none; background: none; cursor: pointer;
+            font-size: 15px; color: #666; border-bottom: 3px solid transparent;
+            font-family: inherit; transition: all 0.2s;
+        }
+        .nav-btn.active { color: #2a5298; border-bottom-color: #2a5298; font-weight: 700; }
+        .nav-btn:hover { color: #2a5298; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 28px; margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 17px; color: #1e3c72; margin-bottom: 20px;
+            padding-bottom: 12px; border-bottom: 2px solid #e8f0fe;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { font-size: 13px; font-weight: 600; color: #444; }
+        .required { color: #e53935; margin-left: 2px; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 9px 13px; border: 1.5px solid #ddd; border-radius: 8px;
+            font-size: 14px; font-family: inherit; transition: border-color 0.2s; color: #333;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { outline: none; border-color: #2a5298; }
+        .form-group textarea { resize: vertical; min-height: 85px; }
+        .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+
+        .btn {
+            padding: 9px 22px; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 14px; font-weight: 600;
+            font-family: inherit; transition: all 0.18s;
+        }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary { background: #2a5298; color: white; }
+        .btn-primary:hover:not(:disabled) { background: #1e3c72; }
+        .btn-secondary { background: #ebebeb; color: #444; }
+        .btn-secondary:hover { background: #ddd; }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-success:hover { background: #1b5e20; }
+        .btn-export { background: #1565c0; color: white; }
+        .btn-export:hover { background: #0d47a1; }
+        .btn-del {
+            background: #ffebee; color: #c62828; border: 1px solid #ef9a9a;
+            padding: 5px 12px; font-size: 12px; border-radius: 6px;
+        }
+        .btn-del:hover { background: #ffcdd2; }
+
+        .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .toolbar input, .toolbar select {
+            padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 8px;
+            font-size: 14px; font-family: inherit;
+        }
+        .toolbar input { flex: 1; min-width: 180px; }
+        .record-count { margin-left: auto; font-size: 13px; color: #888; }
+
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th {
+            background: #eef2ff; color: #2a3a6b; font-size: 13px;
+            padding: 11px 12px; text-align: left;
+            border-bottom: 2px solid #c5d0f0; white-space: nowrap;
+        }
+        td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
+        tr:hover td { background: #f8faff; }
+        .cell-wrap { max-width: 180px; }
+        .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
+
+        .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; border-radius: 12px; padding: 20px 16px;
+            text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+        .stat-card .num { font-size: 38px; font-weight: 700; color: #2a5298; line-height: 1; }
+        .stat-card .lbl { font-size: 13px; color: #777; margin-top: 6px; }
+
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart-card {
+            background: white; border-radius: 12px; padding: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+        .chart-card.full { grid-column: 1 / -1; }
+        .chart-card h3 { font-size: 15px; color: #1e3c72; margin-bottom: 16px; }
+
+        .toast {
+            position: fixed; bottom: 28px; right: 28px;
+            color: white; padding: 12px 20px;
+            border-radius: 8px; font-size: 14px; z-index: 9999;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 700px) {
+            .form-grid, .charts-grid { grid-template-columns: 1fr; }
+            .stat-row { grid-template-columns: 1fr; }
+            .chart-card.full { grid-column: 1; }
+            .container { padding: 14px 12px; }
+            .nav-btn { padding: 12px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>訪視紀錄管理系統</h1>
+    <p>新北市社區訪視紀錄填寫與統計分析</p>
+</div>
+
+<nav class="nav">
+    <button class="nav-btn active" onclick="showSection('form', this)">✏️ 填寫紀錄</button>
+    <button class="nav-btn" onclick="showSection('records', this)">📋 所有紀錄</button>
+    <button class="nav-btn" onclick="showSection('stats', this)">📊 統計分析</button>
+</nav>
+
+<div class="container">
+
+    <!-- ── 填寫紀錄 ── -->
+    <div id="section-form" class="section active">
+        <div class="card">
+            <h2>新增訪視紀錄</h2>
+            <form id="visitForm" novalidate>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>日期<span class="required">*</span></label>
+                        <input type="date" id="f-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>時間<span class="required">*</span></label>
+                        <input type="time" id="f-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>訪視人員姓名<span class="required">*</span></label>
+                        <select id="f-visitor" required>
+                            <option value="">— 請選擇訪視人員 —</option>
+                            <option>呂治漢</option>
+                            <option>楊筱輝</option>
+                            <option>陳海文</option>
+                            <option>謝詣涵</option>
+                            <option>蘇意淳</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>行政區<span class="required">*</span></label>
+                        <select id="f-district" required>
+                            <option value="">— 請選擇行政區 —</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>社區名稱<span class="required">*</span></label>
+                        <input type="text" id="f-community" placeholder="請輸入社區名稱" required>
+                    </div>
+                    <div class="form-group">
+                        <label>社區能力級別<span class="required">*</span></label>
+                        <select id="f-level" required>
+                            <option value="">— 請選擇級別 —</option>
+                            <option>停滯</option>
+                            <option>潛力</option>
+                            <option>成長</option>
+                            <option>成熟</option>
+                            <option>標竿</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>訪視目的<span class="required">*</span></label>
+                        <select id="f-purpose" required>
+                            <option value="">— 請選擇訪視目的 —</option>
+                            <option>中心簡介</option>
+                            <option>社區評估</option>
+                            <option>方案計畫發想及撰寫</option>
+                            <option>活動執行檢討</option>
+                            <option>團隊建置</option>
+                            <option>情緒支持</option>
+                            <option>社區選拔培力</option>
+                            <option>聯合社區培力</option>
+                            <option>台灣夢培力</option>
+                            <option>性別友善社區</option>
+                            <option>其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>訪視內容摘要<span class="required">*</span></label>
+                        <textarea id="f-summary" placeholder="請填寫本次訪視的重點內容…" required></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label>後續追蹤事項</label>
+                        <textarea id="f-followup" placeholder="如有需要後續追蹤的事項請填寫（選填）…"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">清除</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">儲存紀錄</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── 所有紀錄 ── -->
+    <div id="section-records" class="section">
+        <div class="card">
+            <h2>所有訪視紀錄</h2>
+            <div class="toolbar">
+                <input type="text" id="searchInput" placeholder="搜尋人員、社區、目的、內容…" oninput="renderTable()">
+                <select id="filterDistrict" onchange="renderTable()">
+                    <option value="">全部行政區</option>
+                </select>
+                <span class="record-count" id="recordCount"></span>
+                <button class="btn btn-success" onclick="exportExcel()">⬇ 匯出 Excel</button>
+                <button class="btn btn-export" onclick="exportCSV()">⬇ 匯出 CSV</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>訪視人員</th>
+                            <th>行政區</th>
+                            <th>社區名稱</th>
+                            <th>社區能力級別</th>
+                            <th>訪視目的</th>
+                            <th>訪視內容摘要</th>
+                            <th>後續追蹤事項</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── 統計分析 ── -->
+    <div id="section-stats" class="section">
+        <div class="stat-row">
+            <div class="stat-card">
+                <div class="num" id="s-total">—</div>
+                <div class="lbl">總訪視次數</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="s-districts">—</div>
+                <div class="lbl">涵蓋行政區</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="s-visitors">—</div>
+                <div class="lbl">訪視人員數</div>
+            </div>
+        </div>
+        <div class="charts-grid">
+            <div class="chart-card full">
+                <h3>各行政區訪視次數</h3>
+                <canvas id="chart-district"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>訪視人員統計</h3>
+                <canvas id="chart-visitor"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>每月訪視趨勢</h3>
+                <canvas id="chart-month"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Supabase 初始化 ── */
+const { createClient } = window.supabase;
+const db = createClient(
+    'https://yrqzaxhdssihuwimzxcx.supabase.co',
+    'sb_publishable_wvT5p3N2IPOUTf8QYtXv6Q_IT02OPtI'
+);
+
+/* ── 行政區下拉 ── */
+const DISTRICTS = [
+    '板橋區','三重區','中和區','永和區','新莊區','新店區','樹林區','鶯歌區',
+    '三峽區','淡水區','汐止區','瑞芳區','土城區','蘆洲區','五股區','泰山區',
+    '林口區','深坑區','石碇區','坪林區','三芝區','石門區','八里區',
+    '平溪區','雙溪區','貢寮區','金山區','萬里區','烏來區'
+];
+const distSel   = document.getElementById('f-district');
+const filterSel = document.getElementById('filterDistrict');
+DISTRICTS.forEach(d => {
+    distSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
+    filterSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
+});
+
+// 預設今日日期與時間
+const now = new Date();
+document.getElementById('f-date').value = now.toISOString().split('T')[0];
+document.getElementById('f-time').value = now.toTimeString().slice(0, 5);
+
+/* ── 資料庫讀取 ── */
+async function getRecords() {
+    const { data, error } = await db
+        .from('visit_records')
+        .select('*')
+        .order('date', { ascending: false })
+        .order('time', { ascending: false });
+    if (error) { showToast('讀取資料失敗：' + error.message, true); return []; }
+    return data || [];
+}
+
+/* ── 表單送出 ── */
+document.getElementById('visitForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const required = ['f-date','f-time','f-visitor','f-district','f-community','f-level','f-purpose','f-summary'];
+    for (const id of required) {
+        if (!document.getElementById(id).value.trim()) {
+            showToast('請填寫所有必填欄位', true);
+            document.getElementById(id).focus();
+            return;
+        }
+    }
+    const record = {
+        date:      document.getElementById('f-date').value,
+        time:      document.getElementById('f-time').value,
+        visitor:   document.getElementById('f-visitor').value,
+        district:  document.getElementById('f-district').value,
+        community: document.getElementById('f-community').value.trim(),
+        level:     document.getElementById('f-level').value,
+        purpose:   document.getElementById('f-purpose').value,
+        summary:   document.getElementById('f-summary').value.trim(),
+        followup:  document.getElementById('f-followup').value.trim(),
+    };
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '儲存中…';
+
+    const { error } = await db.from('visit_records').insert([record]);
+
+    btn.disabled = false;
+    btn.textContent = '儲存紀錄';
+
+    if (error) { showToast('儲存失敗：' + error.message, true); return; }
+    showToast('訪視紀錄已成功儲存！');
+    resetForm();
+});
+
+function resetForm() {
+    document.getElementById('visitForm').reset();
+    const n = new Date();
+    document.getElementById('f-date').value = n.toISOString().split('T')[0];
+    document.getElementById('f-time').value = n.toTimeString().slice(0, 5);
+}
+
+/* ── 導覽 ── */
+function showSection(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (name === 'records') renderTable();
+    if (name === 'stats')   renderStats();
+}
+
+/* ── 紀錄列表 ── */
+async function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '<tr><td colspan="10" class="no-data">載入中…</td></tr>';
+
+    const records = await getRecords();
+    const search  = document.getElementById('searchInput').value.toLowerCase();
+    const dist    = document.getElementById('filterDistrict').value;
+
+    const filtered = records.filter(r => {
+        const ok_s = !search ||
+            (r.visitor||'').toLowerCase().includes(search)   ||
+            (r.community||'').toLowerCase().includes(search) ||
+            (r.purpose||'').toLowerCase().includes(search)   ||
+            (r.summary||'').toLowerCase().includes(search);
+        const ok_d = !dist || r.district === dist;
+        return ok_s && ok_d;
+    });
+
+    document.getElementById('recordCount').textContent = `共 ${filtered.length} 筆`;
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="no-data">目前沒有符合條件的紀錄</td></tr>';
+        return;
+    }
+    tbody.innerHTML = filtered.map(r => `
+        <tr>
+            <td>${r.date}</td>
+            <td>${r.time}</td>
+            <td>${esc(r.visitor)}</td>
+            <td>${esc(r.district)}</td>
+            <td>${esc(r.community)}</td>
+            <td>${esc(r.level || '')}</td>
+            <td>${esc(r.purpose)}</td>
+            <td class="cell-wrap">${esc(r.summary)}</td>
+            <td class="cell-wrap">${r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>'}</td>
+            <td><button class="btn btn-del" onclick="deleteRecord(${r.id})">刪除</button></td>
+        </tr>`).join('');
+}
+
+async function deleteRecord(id) {
+    if (!confirm('確定要刪除這筆紀錄嗎？')) return;
+    const { error } = await db.from('visit_records').delete().eq('id', id);
+    if (error) { showToast('刪除失敗', true); return; }
+    showToast('紀錄已刪除');
+    renderTable();
+}
+
+function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── 匯出 ── */
+async function getExportData() {
+    const records = await getRecords();
+    return records.map(r => ({
+        '日期': r.date, '時間': r.time, '訪視人員': r.visitor,
+        '行政區': r.district, '社區名稱': r.community,
+        '社區能力級別': r.level || '', '訪視目的': r.purpose,
+        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup || ''
+    }));
+}
+
+async function exportExcel() {
+    const data = await getExportData();
+    if (!data.length) { alert('目前沒有資料可匯出'); return; }
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [10,8,10,8,14,12,18,30,20].map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '訪視紀錄');
+    XLSX.writeFile(wb, `訪視紀錄_${today()}.xlsx`);
+}
+
+async function exportCSV() {
+    const data = await getExportData();
+    if (!data.length) { alert('目前沒有資料可匯出'); return; }
+    const headers = Object.keys(data[0]);
+    const rows = data.map(r => headers.map(h => `"${(r[h]||'').replace(/"/g,'""')}"`).join(','));
+    const csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+    const a = Object.assign(document.createElement('a'), {
+        href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })),
+        download: `訪視紀錄_${today()}.csv`
+    });
+    a.click();
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+
+/* ── 統計 ── */
+const chartInstances = {};
+
+async function renderStats() {
+    const records = await getRecords();
+    document.getElementById('s-total').textContent     = records.length;
+    document.getElementById('s-districts').textContent = new Set(records.map(r => r.district)).size;
+    document.getElementById('s-visitors').textContent  = new Set(records.map(r => r.visitor)).size;
+
+    const dCounts = tally(records, r => r.district);
+    const dSorted = sortDesc(dCounts);
+    renderChart('chart-district', 'bar',
+        dSorted.map(x => x[0]), dSorted.map(x => x[1]), '訪視次數', '#4472c4', '#c5d5f5');
+
+    const vCounts = tally(records, r => r.visitor);
+    const vSorted = sortDesc(vCounts).slice(0, 10);
+    renderChart('chart-visitor', 'bar',
+        vSorted.map(x => x[0]), vSorted.map(x => x[1]), '訪視次數', '#70ad47', '#c8e6c9');
+
+    const mCounts = tally(records, r => (r.date || '').slice(0, 7));
+    const mSorted = Object.entries(mCounts).filter(x => x[0]).sort((a,b) => a[0].localeCompare(b[0]));
+    renderChart('chart-month', 'line',
+        mSorted.map(x => x[0]), mSorted.map(x => x[1]), '訪視次數', '#ed7d31', 'rgba(237,125,49,0.15)');
+}
+
+function tally(arr, keyFn) {
+    return arr.reduce((acc, r) => {
+        const k = keyFn(r); acc[k] = (acc[k] || 0) + 1; return acc;
+    }, {});
+}
+function sortDesc(obj) {
+    return Object.entries(obj).sort((a,b) => b[1] - a[1]);
+}
+function renderChart(id, type, labels, data, label, borderColor, bgColor) {
+    if (chartInstances[id]) chartInstances[id].destroy();
+    chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
+        type,
+        data: {
+            labels,
+            datasets: [{
+                label, data, backgroundColor: bgColor, borderColor,
+                borderWidth: 2, fill: type === 'line', tension: 0.35, pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } }
+        }
+    });
+}
+
+/* ── Toast ── */
+function showToast(msg, isErr = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = isErr ? '#c62828' : '#2e7d32';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+}
+</script>
+</body>
+</html>
