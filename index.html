@@ -261,6 +261,9 @@
 
     <!-- ── 統計分析 ── -->
     <div id="section-stats" class="section">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+            <button class="btn btn-success" onclick="exportStatsExcel()">📊 匯出統計 Excel</button>
+        </div>
         <div class="stat-row">
             <div class="stat-card">
                 <div class="num" id="s-total">—</div>
@@ -548,6 +551,73 @@ async function exportCSV() {
     a.click();
 }
 function today() { return new Date().toISOString().split('T')[0]; }
+
+async function exportStatsExcel() {
+    const records = await getRecords();
+    if (!records.length) { alert('目前沒有資料可匯出'); return; }
+
+    const wb = XLSX.utils.book_new();
+
+    // ── 工作表1：總覽摘要 ──
+    const communities = new Set(records.map(r => r.district + '_' + r.community)).size;
+    const summaryData = [
+        ['項目', '數值'],
+        ['總訪視次數', records.length],
+        ['涵蓋行政區數', new Set(records.map(r => r.district)).size],
+        ['訪視人員數', new Set(records.map(r => r.visitor)).size],
+        ['觸及社區總數', communities],
+        ['已給督導回饋', records.filter(r => r.feedback).length],
+        ['待督導回饋', records.filter(r => !r.feedback).length],
+        ['統計產製時間', new Date().toLocaleString('zh-TW')],
+    ];
+    const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
+    ws1['!cols'] = [{ wch: 20 }, { wch: 16 }];
+    XLSX.utils.book_append_sheet(wb, ws1, '總覽摘要');
+
+    // ── 工作表2：各行政區訪視次數 ──
+    const dCounts = tally(records, r => r.district);
+    const dRows = [['行政區', '訪視次數'], ...sortDesc(dCounts).map(x => [x[0], x[1]])];
+    const ws2 = XLSX.utils.aoa_to_sheet(dRows);
+    ws2['!cols'] = [{ wch: 14 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, ws2, '各行政區統計');
+
+    // ── 工作表3：訪視人員統計 ──
+    const vCounts = tally(records, r => r.visitor);
+    const vRows = [['訪視人員', '訪視次數'], ...sortDesc(vCounts).map(x => [x[0], x[1]])];
+    const ws3 = XLSX.utils.aoa_to_sheet(vRows);
+    ws3['!cols'] = [{ wch: 14 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, ws3, '訪視人員統計');
+
+    // ── 工作表4：每月訪視趨勢 ──
+    const mCounts = tally(records, r => (r.date||'').slice(0, 7));
+    const mRows = [['年月', '訪視次數'], ...Object.entries(mCounts).filter(x=>x[0]).sort((a,b)=>a[0].localeCompare(b[0]))];
+    const ws4 = XLSX.utils.aoa_to_sheet(mRows);
+    ws4['!cols'] = [{ wch: 12 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, ws4, '每月趨勢');
+
+    // ── 工作表5：訪視目的分布 ──
+    const pCounts = tally(records, r => r.purpose);
+    const pRows = [['訪視目的', '次數'], ...sortDesc(pCounts).map(x => [x[0], x[1]])];
+    const ws5 = XLSX.utils.aoa_to_sheet(pRows);
+    ws5['!cols'] = [{ wch: 22 }, { wch: 8 }];
+    XLSX.utils.book_append_sheet(wb, ws5, '訪視目的分布');
+
+    // ── 工作表6：觸及社區清單 ──
+    const cMap = {};
+    records.forEach(r => {
+        const key = r.district + '||' + r.community;
+        if (!cMap[key]) cMap[key] = { district: r.district, community: r.community, count: 0 };
+        cMap[key].count++;
+    });
+    const cRows = [['行政區', '社區名稱', '訪視次數'],
+        ...Object.values(cMap).sort((a,b) => b.count - a.count).map(c => [c.district, c.community, c.count])
+    ];
+    const ws6 = XLSX.utils.aoa_to_sheet(cRows);
+    ws6['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 10 }];
+    XLSX.utils.book_append_sheet(wb, ws6, '觸及社區清單');
+
+    XLSX.writeFile(wb, `訪視統計報表_${today()}.xlsx`);
+}
 
 /* ── 統計 ── */
 const chartInstances = {};
