@@ -50,8 +50,12 @@
         .btn-success:hover { background: #1b5e20; }
         .btn-export { background: #1565c0; color: white; }
         .btn-export:hover { background: #0d47a1; }
+        .btn-word { background: #7b4fa6; color: white; }
+        .btn-word:hover { background: #6a3d91; }
         .btn-del { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; }
         .btn-del:hover { background: #ffcdd2; }
+        .btn-edit { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; }
+        .btn-edit:hover { background: #bbdefb; }
         .btn-feedback { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; transition: all 0.18s; }
         .btn-feedback:hover { background: #fff3cd; }
         .btn-feedback.has-feedback { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
@@ -60,7 +64,7 @@
         .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
         .toolbar input, .toolbar select { padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
         .toolbar input { flex: 1; min-width: 180px; }
-        .record-count { margin-left: auto; font-size: 13px; color: #888; }
+        .record-count { font-size: 13px; color: #888; white-space: nowrap; }
 
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
@@ -70,10 +74,8 @@
         .cell-wrap { max-width: 160px; }
         .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
         .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-
         .feedback-preview { font-size: 12px; color: #2e7d32; margin-top: 4px; background: #f1f8f1; border-radius: 4px; padding: 3px 7px; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* ── Stats ── */
         .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .stat-card { background: white; border-radius: 12px; padding: 20px 16px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
         .stat-card .num { font-size: 38px; font-weight: 700; color: #2a5298; line-height: 1; }
@@ -85,26 +87,20 @@
         .chart-card h3 { font-size: 15px; color: #1e3c72; margin-bottom: 16px; }
         .pie-wrap { max-width: 300px; margin: 0 auto; }
 
-        /* 社區清單 */
         .community-list-wrap { max-height: 300px; overflow-y: auto; }
-        .community-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 10px; border-radius: 6px; margin-bottom: 4px;
-            background: #f4f7ff; font-size: 13px;
-        }
+        .community-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 6px; margin-bottom: 4px; background: #f4f7ff; font-size: 13px; }
         .community-item:hover { background: #e8f0fe; }
         .community-name { font-weight: 600; color: #1e3c72; }
         .community-district { font-size: 11px; color: #888; margin-top: 2px; }
         .community-count { background: #2a5298; color: white; border-radius: 12px; padding: 2px 9px; font-size: 12px; font-weight: 700; }
 
-        /* ── Modal ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,40,0.5); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 14px; box-shadow: 0 8px 32px rgba(26,77,110,0.18); width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; animation: slideUp .22s ease; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-head { padding: 18px 22px 14px; border-bottom: 1.5px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
         .modal-head h3 { font-size: 16px; color: #1e3c72; }
-        .modal-close { width: 30px; height: 30px; border-radius: 50%; border: none; background: #f0f0f0; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: #666; transition: background .15s; }
+        .modal-close { width: 30px; height: 30px; border-radius: 50%; border: none; background: #f0f0f0; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: #666; }
         .modal-close:hover { background: #ddd; }
         .modal-body { padding: 20px 22px; }
         .modal-foot { padding: 14px 22px; border-top: 1.5px solid #eee; display: flex; justify-content: flex-end; gap: 10px; position: sticky; bottom: 0; background: white; }
@@ -113,7 +109,6 @@
         .record-summary strong { color: #2a5298; }
         .record-summary .row { display: flex; gap: 8px; }
         .record-summary .label { color: #888; min-width: 70px; flex-shrink: 0; }
-
         .existing-feedback { background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; }
         .existing-feedback .ef-label { font-size: 11px; font-weight: 700; color: #2e7d32; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
         .existing-feedback .ef-time { font-size: 11px; color: #888; margin-top: 6px; }
@@ -146,7 +141,7 @@
 
 <div class="container">
 
-    <!-- ── 填寫紀錄 ── -->
+    <!-- 填寫紀錄 -->
     <div id="section-form" class="section active">
         <div class="card">
             <h2>新增訪視紀錄</h2>
@@ -185,27 +180,19 @@
                         <label>社區能力級別<span class="required">*</span></label>
                         <select id="f-level" required>
                             <option value="">— 請選擇級別 —</option>
-                            <option>停滯</option>
-                            <option>潛力</option>
-                            <option>成長</option>
-                            <option>成熟</option>
-                            <option>標竿</option>
+                            <option>停滯</option><option>潛力</option><option>成長</option>
+                            <option>成熟</option><option>標竿</option>
                         </select>
                     </div>
                     <div class="form-group full">
                         <label>訪視目的<span class="required">*</span></label>
                         <select id="f-purpose" required>
                             <option value="">— 請選擇訪視目的 —</option>
-                            <option>中心簡介</option>
-                            <option>社區評估</option>
-                            <option>方案計畫發想及撰寫</option>
-                            <option>活動執行檢討</option>
-                            <option>團隊建置</option>
-                            <option>情緒支持</option>
-                            <option>社區選拔培力</option>
-                            <option>聯合社區培力</option>
-                            <option>台灣夢培力</option>
-                            <option>性別友善社區</option>
+                            <option>中心簡介</option><option>社區評估</option>
+                            <option>方案計畫發想及撰寫</option><option>活動執行檢討</option>
+                            <option>團隊建置</option><option>情緒支持</option>
+                            <option>社區選拔培力</option><option>聯合社區培力</option>
+                            <option>台灣夢培力</option><option>性別友善社區</option>
                             <option>其他</option>
                         </select>
                     </div>
@@ -226,7 +213,7 @@
         </div>
     </div>
 
-    <!-- ── 所有紀錄 ── -->
+    <!-- 所有紀錄 -->
     <div id="section-records" class="section">
         <div class="card">
             <h2>所有訪視紀錄</h2>
@@ -243,6 +230,10 @@
                 <span class="record-count" id="recordCount"></span>
                 <button class="btn btn-success" onclick="exportExcel()">⬇ 匯出 Excel</button>
                 <button class="btn btn-export" onclick="exportCSV()">⬇ 匯出 CSV</button>
+                <select id="exportMonth" style="min-width:120px;">
+                    <option value="">選擇月份…</option>
+                </select>
+                <button class="btn btn-word" onclick="exportWordByMonth()">📄 匯出月報 Word</button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -259,57 +250,98 @@
         </div>
     </div>
 
-    <!-- ── 統計分析 ── -->
+    <!-- 統計分析 -->
     <div id="section-stats" class="section">
         <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
             <button class="btn btn-success" onclick="exportStatsExcel()">📊 匯出統計 Excel</button>
         </div>
         <div class="stat-row">
-            <div class="stat-card">
-                <div class="num" id="s-total">—</div>
-                <div class="lbl">總訪視次數</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="s-districts">—</div>
-                <div class="lbl">涵蓋行政區</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="s-visitors">—</div>
-                <div class="lbl">訪視人員數</div>
-            </div>
-            <div class="stat-card">
-                <div class="num" id="s-communities">—</div>
-                <div class="lbl">觸及社區總數</div>
-            </div>
+            <div class="stat-card"><div class="num" id="s-total">—</div><div class="lbl">總訪視次數</div></div>
+            <div class="stat-card"><div class="num" id="s-districts">—</div><div class="lbl">涵蓋行政區</div></div>
+            <div class="stat-card"><div class="num" id="s-visitors">—</div><div class="lbl">訪視人員數</div></div>
+            <div class="stat-card"><div class="num" id="s-communities">—</div><div class="lbl">觸及社區總數</div></div>
         </div>
         <div class="charts-grid">
-            <div class="chart-card full">
-                <h3>各行政區訪視次數</h3>
-                <canvas id="chart-district"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>訪視人員統計</h3>
-                <canvas id="chart-visitor"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>每月訪視趨勢</h3>
-                <canvas id="chart-month"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>訪視目的分布</h3>
-                <div class="pie-wrap">
-                    <canvas id="chart-purpose"></canvas>
-                </div>
-            </div>
-            <div class="chart-card">
-                <h3>觸及社區清單</h3>
-                <div class="community-list-wrap" id="community-list"></div>
-            </div>
+            <div class="chart-card full"><h3>各行政區訪視次數</h3><canvas id="chart-district"></canvas></div>
+            <div class="chart-card"><h3>訪視人員統計</h3><canvas id="chart-visitor"></canvas></div>
+            <div class="chart-card"><h3>每月訪視趨勢</h3><canvas id="chart-month"></canvas></div>
+            <div class="chart-card"><h3>訪視目的分布</h3><div class="pie-wrap"><canvas id="chart-purpose"></canvas></div></div>
+            <div class="chart-card"><h3>觸及社區清單</h3><div class="community-list-wrap" id="community-list"></div></div>
         </div>
     </div>
 </div>
 
-<!-- ── 回饋 Modal ── -->
+<!-- 編輯紀錄 Modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal" style="width:620px;">
+        <div class="modal-head">
+            <h3>✏️ 編輯訪視紀錄</h3>
+            <button class="modal-close" onclick="closeEdit()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>日期<span class="required">*</span></label>
+                    <input type="date" id="e-date">
+                </div>
+                <div class="form-group">
+                    <label>時間<span class="required">*</span></label>
+                    <input type="time" id="e-time">
+                </div>
+                <div class="form-group">
+                    <label>訪視人員姓名<span class="required">*</span></label>
+                    <select id="e-visitor">
+                        <option value="">— 請選擇訪視人員 —</option>
+                        <option>呂治漢</option><option>楊筱輝</option>
+                        <option>陳海文</option><option>謝詣涵</option><option>蘇意淳</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>行政區<span class="required">*</span></label>
+                    <select id="e-district"></select>
+                </div>
+                <div class="form-group">
+                    <label>社區名稱<span class="required">*</span></label>
+                    <input type="text" id="e-community" placeholder="請輸入社區名稱">
+                </div>
+                <div class="form-group">
+                    <label>社區能力級別<span class="required">*</span></label>
+                    <select id="e-level">
+                        <option value="">— 請選擇級別 —</option>
+                        <option>停滯</option><option>潛力</option><option>成長</option>
+                        <option>成熟</option><option>標竿</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>訪視目的<span class="required">*</span></label>
+                    <select id="e-purpose">
+                        <option value="">— 請選擇訪視目的 —</option>
+                        <option>中心簡介</option><option>社區評估</option>
+                        <option>方案計畫發想及撰寫</option><option>活動執行檢討</option>
+                        <option>團隊建置</option><option>情緒支持</option>
+                        <option>社區選拔培力</option><option>聯合社區培力</option>
+                        <option>台灣夢培力</option><option>性別友善社區</option>
+                        <option>其他</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>訪視內容摘要<span class="required">*</span></label>
+                    <textarea id="e-summary" rows="4" placeholder="請填寫本次訪視的重點內容…"></textarea>
+                </div>
+                <div class="form-group full">
+                    <label>後續追蹤事項</label>
+                    <textarea id="e-followup" rows="3" placeholder="如有需要後續追蹤的事項請填寫（選填）…"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-secondary" onclick="closeEdit()">取消</button>
+            <button class="btn btn-primary" id="e-save-btn" onclick="saveEdit()">💾 儲存修改</button>
+        </div>
+    </div>
+</div>
+
+<!-- 回饋 Modal -->
 <div class="modal-overlay" id="feedbackModal">
     <div class="modal">
         <div class="modal-head">
@@ -338,46 +370,51 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const { createClient } = window.supabase;
-const db = createClient(
+/* ── Supabase ── */
+var _supabase = window.supabase.createClient(
     'https://yrqzaxhdssihuwimzxcx.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycXpheGhkc3NpaHV3aW16eGN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNDc2OTEsImV4cCI6MjA5MDcyMzY5MX0.VTcdJCO9bLPR73EosorHJyA3JuL-C7dAd9tpZG8JOzs'
 );
 
-const DISTRICTS = [
+/* ── 行政區 ── */
+var DISTRICTS = [
     '板橋區','三重區','中和區','永和區','新莊區','新店區','樹林區','鶯歌區',
     '三峽區','淡水區','汐止區','瑞芳區','土城區','蘆洲區','五股區','泰山區',
     '林口區','深坑區','石碇區','坪林區','三芝區','石門區','八里區',
     '平溪區','雙溪區','貢寮區','金山區','萬里區','烏來區'
 ];
-const distSel = document.getElementById('f-district');
-const filterSel = document.getElementById('filterDistrict');
-DISTRICTS.forEach(d => {
-    distSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
-    filterSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
+DISTRICTS.forEach(function(d) {
+    document.getElementById('f-district').insertAdjacentHTML('beforeend', '<option value="'+d+'">'+d+'</option>');
+    document.getElementById('filterDistrict').insertAdjacentHTML('beforeend', '<option value="'+d+'">'+d+'</option>');
+    document.getElementById('e-district').insertAdjacentHTML('beforeend', '<option value="'+d+'">'+d+'</option>');
 });
 
-const now = new Date();
-document.getElementById('f-date').value = now.toISOString().split('T')[0];
-document.getElementById('f-time').value = now.toTimeString().slice(0, 5);
+var nowD = new Date();
+document.getElementById('f-date').value = nowD.toISOString().split('T')[0];
+document.getElementById('f-time').value = nowD.toTimeString().slice(0, 5);
 
-async function getRecords() {
-    const { data, error } = await db.from('visit_records').select('*')
-        .order('date', { ascending: false }).order('time', { ascending: false });
-    if (error) { showToast('讀取資料失敗：' + error.message, true); return []; }
-    return data || [];
+/* ── DB ── */
+function getRecords() {
+    return _supabase.from('visit_records').select('*')
+        .order('date', { ascending: false })
+        .order('time', { ascending: false })
+        .then(function(res) {
+            if (res.error) { showToast('讀取資料失敗：' + res.error.message, true); return []; }
+            return res.data || [];
+        });
 }
 
-document.getElementById('visitForm').addEventListener('submit', async function (e) {
+/* ── 表單 ── */
+document.getElementById('visitForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const required = ['f-date','f-time','f-visitor','f-district','f-community','f-level','f-purpose','f-summary'];
-    for (const id of required) {
-        if (!document.getElementById(id).value.trim()) {
+    var ids = ['f-date','f-time','f-visitor','f-district','f-community','f-level','f-purpose','f-summary'];
+    for (var i = 0; i < ids.length; i++) {
+        if (!document.getElementById(ids[i]).value.trim()) {
             showToast('請填寫所有必填欄位', true);
-            document.getElementById(id).focus(); return;
+            document.getElementById(ids[i]).focus(); return;
         }
     }
-    const record = {
+    var record = {
         date:      document.getElementById('f-date').value,
         time:      document.getElementById('f-time').value,
         visitor:   document.getElementById('f-visitor').value,
@@ -388,77 +425,140 @@ document.getElementById('visitForm').addEventListener('submit', async function (
         summary:   document.getElementById('f-summary').value.trim(),
         followup:  document.getElementById('f-followup').value.trim(),
     };
-    const btn = document.getElementById('submitBtn');
+    var btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = '儲存中…';
-    const { error } = await db.from('visit_records').insert([record]);
-    btn.disabled = false; btn.textContent = '儲存紀錄';
-    if (error) { showToast('儲存失敗：' + error.message, true); return; }
-    showToast('訪視紀錄已成功儲存！');
-    resetForm();
+    _supabase.from('visit_records').insert([record]).then(function(res) {
+        btn.disabled = false; btn.textContent = '儲存紀錄';
+        if (res.error) { showToast('儲存失敗：' + res.error.message, true); return; }
+        showToast('訪視紀錄已成功儲存！');
+        resetForm();
+    });
 });
 
 function resetForm() {
     document.getElementById('visitForm').reset();
-    const n = new Date();
+    var n = new Date();
     document.getElementById('f-date').value = n.toISOString().split('T')[0];
     document.getElementById('f-time').value = n.toTimeString().slice(0, 5);
 }
 
+/* ── 導覽 ── */
 function showSection(name, btn) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
     document.getElementById('section-' + name).classList.add('active');
     btn.classList.add('active');
     if (name === 'records') renderTable();
     if (name === 'stats')   renderStats();
 }
 
-async function renderTable() {
-    const tbody = document.getElementById('tableBody');
+/* ── 紀錄列表 ── */
+function renderTable() {
+    var tbody = document.getElementById('tableBody');
     tbody.innerHTML = '<tr><td colspan="11" class="no-data">載入中…</td></tr>';
-    const records  = await getRecords();
-    const search   = document.getElementById('searchInput').value.toLowerCase();
-    const dist     = document.getElementById('filterDistrict').value;
-    const fbFilter = document.getElementById('filterFeedback').value;
-    const filtered = records.filter(r => {
-        const ok_s = !search ||
-            (r.visitor||'').toLowerCase().includes(search)   ||
-            (r.community||'').toLowerCase().includes(search) ||
-            (r.purpose||'').toLowerCase().includes(search)   ||
-            (r.summary||'').toLowerCase().includes(search);
-        const ok_d = !dist || r.district === dist;
-        const ok_f = !fbFilter || (fbFilter === 'has' && r.feedback) || (fbFilter === 'none' && !r.feedback);
-        return ok_s && ok_d && ok_f;
+    getRecords().then(function(records) {
+        var search   = document.getElementById('searchInput').value.toLowerCase();
+        var dist     = document.getElementById('filterDistrict').value;
+        var fbFilter = document.getElementById('filterFeedback').value;
+        var filtered = records.filter(function(r) {
+            var ok_s = !search ||
+                (r.visitor||'').toLowerCase().indexOf(search) > -1 ||
+                (r.community||'').toLowerCase().indexOf(search) > -1 ||
+                (r.purpose||'').toLowerCase().indexOf(search) > -1 ||
+                (r.summary||'').toLowerCase().indexOf(search) > -1;
+            var ok_d = !dist || r.district === dist;
+            var ok_f = !fbFilter || (fbFilter === 'has' && r.feedback) || (fbFilter === 'none' && !r.feedback);
+            return ok_s && ok_d && ok_f;
+        });
+        document.getElementById('recordCount').textContent = '共 ' + filtered.length + ' 筆';
+        populateMonthDropdown(records);
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>'; return;
+        }
+        tbody.innerHTML = filtered.map(function(r) {
+            var hasFb = !!r.feedback;
+            var fbCell = hasFb
+                ? '<div class="feedback-preview" title="'+esc(r.feedback)+'">✅ '+esc(r.feedback)+'</div>'
+                : '<span style="color:#bbb;font-size:12px;">⏳ 待回饋</span>';
+            return '<tr><td>'+r.date+'</td><td>'+r.time+'</td><td>'+esc(r.visitor)+'</td>'
+                +'<td>'+esc(r.district)+'</td><td>'+esc(r.community)+'</td><td>'+esc(r.level||'')+'</td>'
+                +'<td>'+esc(r.purpose)+'</td>'
+                +'<td class="cell-wrap">'+esc(r.summary)+'</td>'
+                +'<td class="cell-wrap">'+(r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>')+'</td>'
+                +'<td>'+fbCell+'</td>'
+                +'<td><div class="td-actions">'
+                +'<button class="btn-edit" onclick="openEdit('+r.id+')">✏️ 編輯</button>'
+                +'<button class="btn-feedback '+(hasFb?'has-feedback':'')+'" onclick="openFeedback('+r.id+')">'+(hasFb?'💬 編輯回饋':'💬 給回饋')+'</button>'
+                +'<button class="btn-del" onclick="deleteRecord('+r.id+')">刪除</button>'
+                +'</div></td></tr>';
+        }).join('');
     });
-    document.getElementById('recordCount').textContent = `共 ${filtered.length} 筆`;
-    if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>'; return;
-    }
-    tbody.innerHTML = filtered.map(r => {
-        const hasFb = !!r.feedback;
-        const fbCell = hasFb
-            ? `<div class="feedback-preview" title="${esc(r.feedback)}">✅ ${esc(r.feedback)}</div>`
-            : `<span style="color:#bbb;font-size:12px;">⏳ 待回饋</span>`;
-        return `<tr>
-            <td>${r.date}</td><td>${r.time}</td><td>${esc(r.visitor)}</td>
-            <td>${esc(r.district)}</td><td>${esc(r.community)}</td><td>${esc(r.level||'')}</td>
-            <td>${esc(r.purpose)}</td>
-            <td class="cell-wrap">${esc(r.summary)}</td>
-            <td class="cell-wrap">${r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>'}</td>
-            <td>${fbCell}</td>
-            <td><div class="td-actions">
-                <button class="btn-feedback ${hasFb?'has-feedback':''}" onclick="openFeedback(${r.id})">${hasFb?'✏️ 編輯回饋':'💬 給回饋'}</button>
-                <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
-            </div></td>
-        </tr>`;
-    }).join('');
 }
 
-async function deleteRecord(id) {
+/* ── 編輯紀錄 ── */
+var currentEditId = null;
+
+function openEdit(id) {
+    currentEditId = id;
+    _supabase.from('visit_records').select('*').eq('id', id).single().then(function(res) {
+        var data = res.data;
+        if (res.error || !data) { showToast('無法載入紀錄', true); return; }
+        document.getElementById('e-date').value     = data.date || '';
+        document.getElementById('e-time').value     = data.time || '';
+        document.getElementById('e-visitor').value  = data.visitor || '';
+        document.getElementById('e-district').value = data.district || '';
+        document.getElementById('e-community').value= data.community || '';
+        document.getElementById('e-level').value    = data.level || '';
+        document.getElementById('e-purpose').value  = data.purpose || '';
+        document.getElementById('e-summary').value  = data.summary || '';
+        document.getElementById('e-followup').value = data.followup || '';
+        document.getElementById('editModal').classList.add('active');
+    });
+}
+
+function closeEdit() {
+    document.getElementById('editModal').classList.remove('active');
+    currentEditId = null;
+}
+
+function saveEdit() {
+    var ids = ['e-date','e-time','e-visitor','e-district','e-community','e-level','e-purpose','e-summary'];
+    for (var i = 0; i < ids.length; i++) {
+        if (!document.getElementById(ids[i]).value.trim()) {
+            showToast('請填寫所有必填欄位', true);
+            document.getElementById(ids[i]).focus(); return;
+        }
+    }
+    var updated = {
+        date:      document.getElementById('e-date').value,
+        time:      document.getElementById('e-time').value,
+        visitor:   document.getElementById('e-visitor').value,
+        district:  document.getElementById('e-district').value,
+        community: document.getElementById('e-community').value.trim(),
+        level:     document.getElementById('e-level').value,
+        purpose:   document.getElementById('e-purpose').value,
+        summary:   document.getElementById('e-summary').value.trim(),
+        followup:  document.getElementById('e-followup').value.trim(),
+    };
+    var btn = document.getElementById('e-save-btn');
+    btn.disabled = true; btn.textContent = '儲存中…';
+    _supabase.from('visit_records').update(updated).eq('id', currentEditId).then(function(res) {
+        btn.disabled = false; btn.textContent = '💾 儲存修改';
+        if (res.error) { showToast('儲存失敗：' + res.error.message, true); return; }
+        showToast('訪視紀錄已更新！'); closeEdit(); renderTable();
+    });
+}
+
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEdit();
+});
+
+function deleteRecord(id) {
     if (!confirm('確定要刪除這筆紀錄嗎？')) return;
-    const { error } = await db.from('visit_records').delete().eq('id', id);
-    if (error) { showToast('刪除失敗', true); return; }
-    showToast('紀錄已刪除'); renderTable();
+    _supabase.from('visit_records').delete().eq('id', id).then(function(res) {
+        if (res.error) { showToast('刪除失敗', true); return; }
+        showToast('紀錄已刪除'); renderTable();
+    });
 }
 
 function esc(str) {
@@ -466,33 +566,35 @@ function esc(str) {
 }
 
 /* ── 回饋 Modal ── */
-let currentFeedbackId = null;
+var currentFeedbackId = null;
 
-async function openFeedback(id) {
+function openFeedback(id) {
     currentFeedbackId = id;
-    const { data, error } = await db.from('visit_records').select('*').eq('id', id).single();
-    if (error || !data) { showToast('無法載入紀錄', true); return; }
-    document.getElementById('fb-summary').innerHTML = `
-        <div class="row"><span class="label">訪視人員</span><strong>${esc(data.visitor)}</strong></div>
-        <div class="row"><span class="label">日期時間</span>${data.date} ${data.time}</div>
-        <div class="row"><span class="label">地點</span>${esc(data.district)} ／ ${esc(data.community)}</div>
-        <div class="row"><span class="label">訪視目的</span>${esc(data.purpose)}</div>
-        <div class="row"><span class="label">內容摘要</span>${esc(data.summary)}</div>`;
-    const existingDiv = document.getElementById('fb-existing');
-    if (data.feedback) {
-        existingDiv.style.display = '';
-        document.getElementById('fb-existing-text').textContent = data.feedback;
-        const t = data.feedback_at ? new Date(data.feedback_at).toLocaleString('zh-TW') : '';
-        document.getElementById('fb-existing-time').textContent = t ? `回饋時間：${t}` : '';
-        document.getElementById('fb-input-label').textContent = '修改回饋內容';
-        document.getElementById('fb-input').value = data.feedback;
-    } else {
-        existingDiv.style.display = 'none';
-        document.getElementById('fb-input-label').textContent = '督導回饋內容';
-        document.getElementById('fb-input').value = '';
-    }
-    document.getElementById('feedbackModal').classList.add('active');
-    setTimeout(() => document.getElementById('fb-input').focus(), 300);
+    _supabase.from('visit_records').select('*').eq('id', id).single().then(function(res) {
+        var data = res.data;
+        if (res.error || !data) { showToast('無法載入紀錄', true); return; }
+        document.getElementById('fb-summary').innerHTML =
+            '<div class="row"><span class="label">訪視人員</span><strong>'+esc(data.visitor)+'</strong></div>'
+            +'<div class="row"><span class="label">日期時間</span>'+data.date+' '+data.time+'</div>'
+            +'<div class="row"><span class="label">地點</span>'+esc(data.district)+' ／ '+esc(data.community)+'</div>'
+            +'<div class="row"><span class="label">訪視目的</span>'+esc(data.purpose)+'</div>'
+            +'<div class="row"><span class="label">內容摘要</span>'+esc(data.summary)+'</div>';
+        var existingDiv = document.getElementById('fb-existing');
+        if (data.feedback) {
+            existingDiv.style.display = '';
+            document.getElementById('fb-existing-text').textContent = data.feedback;
+            var t = data.feedback_at ? new Date(data.feedback_at).toLocaleString('zh-TW') : '';
+            document.getElementById('fb-existing-time').textContent = t ? '回饋時間：'+t : '';
+            document.getElementById('fb-input-label').textContent = '修改回饋內容';
+            document.getElementById('fb-input').value = data.feedback;
+        } else {
+            existingDiv.style.display = 'none';
+            document.getElementById('fb-input-label').textContent = '督導回饋內容';
+            document.getElementById('fb-input').value = '';
+        }
+        document.getElementById('feedbackModal').classList.add('active');
+        setTimeout(function() { document.getElementById('fb-input').focus(); }, 300);
+    });
 }
 
 function closeFeedback() {
@@ -500,235 +602,275 @@ function closeFeedback() {
     currentFeedbackId = null;
 }
 
-async function saveFeedback() {
-    const text = document.getElementById('fb-input').value.trim();
+function saveFeedback() {
+    var text = document.getElementById('fb-input').value.trim();
     if (!text) { showToast('請填寫回饋內容', true); return; }
-    const btn = document.getElementById('fb-save-btn');
+    var btn = document.getElementById('fb-save-btn');
     btn.disabled = true; btn.textContent = '儲存中…';
-    const { error } = await db.from('visit_records').update({
-        feedback: text, feedback_at: new Date().toISOString()
-    }).eq('id', currentFeedbackId);
-    btn.disabled = false; btn.textContent = '💾 儲存回饋';
-    if (error) { showToast('儲存失敗：' + error.message, true); return; }
-    showToast('督導回饋已儲存！'); closeFeedback(); renderTable();
+    _supabase.from('visit_records').update({ feedback: text, feedback_at: new Date().toISOString() })
+        .eq('id', currentFeedbackId).then(function(res) {
+            btn.disabled = false; btn.textContent = '💾 儲存回饋';
+            if (res.error) { showToast('儲存失敗：' + res.error.message, true); return; }
+            showToast('督導回饋已儲存！'); closeFeedback(); renderTable();
+        });
 }
 
 document.getElementById('feedbackModal').addEventListener('click', function(e) {
     if (e.target === this) closeFeedback();
 });
 
-/* ── 匯出 ── */
-async function getExportData() {
-    const records = await getRecords();
-    return records.map(r => ({
-        '日期': r.date, '時間': r.time, '訪視人員': r.visitor,
-        '行政區': r.district, '社區名稱': r.community,
-        '社區能力級別': r.level||'', '訪視目的': r.purpose,
-        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup||'',
-        '督導回饋': r.feedback||'',
-        '回饋時間': r.feedback_at ? new Date(r.feedback_at).toLocaleString('zh-TW') : ''
-    }));
-}
-async function exportExcel() {
-    const data = await getExportData();
-    if (!data.length) { alert('目前沒有資料可匯出'); return; }
-    const ws = XLSX.utils.json_to_sheet(data);
-    ws['!cols'] = [10,8,10,8,14,12,18,30,20,30,18].map(w => ({ wch: w }));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, '訪視紀錄');
-    XLSX.writeFile(wb, `訪視紀錄_${today()}.xlsx`);
-}
-async function exportCSV() {
-    const data = await getExportData();
-    if (!data.length) { alert('目前沒有資料可匯出'); return; }
-    const headers = Object.keys(data[0]);
-    const rows = data.map(r => headers.map(h => `"${(r[h]||'').replace(/"/g,'""')}"`).join(','));
-    const csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
-    const a = Object.assign(document.createElement('a'), {
-        href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })),
-        download: `訪視紀錄_${today()}.csv`
+/* ── 月份下拉 ── */
+function populateMonthDropdown(records) {
+    var months = [];
+    var seen = {};
+    records.forEach(function(r) {
+        var m = (r.date||'').slice(0,7);
+        if (m && !seen[m]) { seen[m] = true; months.push(m); }
     });
-    a.click();
+    months.sort().reverse();
+    var sel = document.getElementById('exportMonth');
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">選擇月份…</option>';
+    months.forEach(function(m) {
+        var parts = m.split('-');
+        sel.insertAdjacentHTML('beforeend', '<option value="'+m+'"'+(m===cur?' selected':'')+'>'+parts[0]+' 年 '+parseInt(parts[1])+' 月</option>');
+    });
 }
+
+/* ── 匯出 Word（HTML Blob 方式，Safari 相容）── */
+function exportWordByMonth() {
+    var month = document.getElementById('exportMonth').value;
+    if (!month) { showToast('請先選擇月份', true); return; }
+    getRecords().then(function(records) {
+        var filtered = records.filter(function(r) { return (r.date||'').indexOf(month) === 0; })
+                              .sort(function(a,b) { return (a.date+a.time).localeCompare(b.date+b.time); });
+        if (!filtered.length) { showToast('該月份沒有訪視紀錄', true); return; }
+
+        var parts = month.split('-');
+        var title = parts[0] + ' 年 ' + parseInt(parts[1]) + ' 月 訪視紀錄月報';
+        var makeRow = function(label, value) {
+            return '<tr>'
+                + '<td style="background:#eef2ff;font-weight:bold;color:#2a5298;width:18%;padding:7px 10px;border:1px solid #c5d0f0;">'+label+'</td>'
+                + '<td style="padding:7px 10px;border:1px solid #c5d0f0;">'+(value||'—')+'</td>'
+                + '</tr>';
+        };
+        var body = filtered.map(function(r, idx) {
+            return '<div style="margin-bottom:28px;">'
+                + '<p style="font-weight:bold;color:#1e3c72;font-size:15px;border-bottom:2px solid #2a5298;padding-bottom:4px;margin-bottom:8px;">'
+                + '【第 '+(idx+1)+' 筆】'+r.date+' '+r.time+'　'+r.district+' '+r.community+'</p>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:13px;">'
+                + makeRow('訪視人員', r.visitor)
+                + makeRow('行政區', r.district)
+                + makeRow('社區名稱', r.community)
+                + makeRow('社區能力級別', r.level||'—')
+                + makeRow('訪視目的', r.purpose)
+                + makeRow('訪視內容摘要', (r.summary||'').replace(/\n/g,'<br>'))
+                + makeRow('後續追蹤事項', r.followup ? (r.followup).replace(/\n/g,'<br>') : '無')
+                + makeRow('督導回饋', r.feedback ? (r.feedback).replace(/\n/g,'<br>') : '（尚未回饋）')
+                + '</table></div>';
+        }).join('');
+
+        var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" '
+            + 'xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+            + '<head><meta charset="UTF-8">'
+            + '<style>body{font-family:"Microsoft JhengHei",sans-serif;font-size:14px;margin:40px;} h1{text-align:center;color:#1e3c72;} p.sub{text-align:center;color:#666;margin-bottom:28px;}</style>'
+            + '</head><body>'
+            + '<h1>'+title+'</h1>'
+            + '<p class="sub">製表日期：'+new Date().toLocaleDateString('zh-TW')+'　　本月訪視筆數：'+filtered.length+' 筆</p>'
+            + body
+            + '</body></html>';
+
+        var blob = new Blob(['\ufeff'+html], { type: 'application/msword;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = '訪視月報_'+month+'.doc';
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+        showToast('📄 '+parts[0]+'年'+parseInt(parts[1])+'月月報已匯出！');
+    });
+}
+
+/* ── 匯出 Excel（紀錄）── */
+function getExportData() {
+    return getRecords().then(function(records) {
+        return records.map(function(r) {
+            return {
+                '日期': r.date, '時間': r.time, '訪視人員': r.visitor,
+                '行政區': r.district, '社區名稱': r.community,
+                '社區能力級別': r.level||'', '訪視目的': r.purpose,
+                '訪視內容摘要': r.summary, '後續追蹤事項': r.followup||'',
+                '督導回饋': r.feedback||'',
+                '回饋時間': r.feedback_at ? new Date(r.feedback_at).toLocaleString('zh-TW') : ''
+            };
+        });
+    });
+}
+
+function exportExcel() {
+    getExportData().then(function(data) {
+        if (!data.length) { alert('目前沒有資料可匯出'); return; }
+        var ws = XLSX.utils.json_to_sheet(data);
+        ws['!cols'] = [10,8,10,8,14,12,18,30,20,30,18].map(function(w) { return { wch: w }; });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '訪視紀錄');
+        XLSX.writeFile(wb, '訪視紀錄_'+today()+'.xlsx');
+    });
+}
+
+function exportCSV() {
+    getExportData().then(function(data) {
+        if (!data.length) { alert('目前沒有資料可匯出'); return; }
+        var headers = Object.keys(data[0]);
+        var rows = data.map(function(r) {
+            return headers.map(function(h) { return '"'+(r[h]||'').replace(/"/g,'""')+'"'; }).join(',');
+        });
+        var csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+        a.download = '訪視紀錄_'+today()+'.csv';
+        a.click();
+    });
+}
+
 function today() { return new Date().toISOString().split('T')[0]; }
 
-async function exportStatsExcel() {
-    const records = await getRecords();
-    if (!records.length) { alert('目前沒有資料可匯出'); return; }
+/* ── 匯出統計 Excel ── */
+function exportStatsExcel() {
+    getRecords().then(function(records) {
+        if (!records.length) { alert('目前沒有資料可匯出'); return; }
+        var wb = XLSX.utils.book_new();
 
-    const wb = XLSX.utils.book_new();
+        var communities = new Set(records.map(function(r) { return r.district+'_'+r.community; })).size;
+        var ws1 = XLSX.utils.aoa_to_sheet([
+            ['項目','數值'],
+            ['總訪視次數', records.length],
+            ['涵蓋行政區數', new Set(records.map(function(r){return r.district;})).size],
+            ['訪視人員數', new Set(records.map(function(r){return r.visitor;})).size],
+            ['觸及社區總數', communities],
+            ['已給督導回饋', records.filter(function(r){return r.feedback;}).length],
+            ['待督導回饋', records.filter(function(r){return !r.feedback;}).length],
+            ['統計產製時間', new Date().toLocaleString('zh-TW')],
+        ]);
+        ws1['!cols'] = [{wch:20},{wch:16}];
+        XLSX.utils.book_append_sheet(wb, ws1, '總覽摘要');
 
-    // ── 工作表1：總覽摘要 ──
-    const communities = new Set(records.map(r => r.district + '_' + r.community)).size;
-    const summaryData = [
-        ['項目', '數值'],
-        ['總訪視次數', records.length],
-        ['涵蓋行政區數', new Set(records.map(r => r.district)).size],
-        ['訪視人員數', new Set(records.map(r => r.visitor)).size],
-        ['觸及社區總數', communities],
-        ['已給督導回饋', records.filter(r => r.feedback).length],
-        ['待督導回饋', records.filter(r => !r.feedback).length],
-        ['統計產製時間', new Date().toLocaleString('zh-TW')],
-    ];
-    const ws1 = XLSX.utils.aoa_to_sheet(summaryData);
-    ws1['!cols'] = [{ wch: 20 }, { wch: 16 }];
-    XLSX.utils.book_append_sheet(wb, ws1, '總覽摘要');
+        var dCounts = tally(records, function(r){return r.district;});
+        var ws2 = XLSX.utils.aoa_to_sheet([['行政區','訪視次數']].concat(sortDesc(dCounts).map(function(x){return [x[0],x[1]];})));
+        ws2['!cols'] = [{wch:14},{wch:10}];
+        XLSX.utils.book_append_sheet(wb, ws2, '各行政區統計');
 
-    // ── 工作表2：各行政區訪視次數 ──
-    const dCounts = tally(records, r => r.district);
-    const dRows = [['行政區', '訪視次數'], ...sortDesc(dCounts).map(x => [x[0], x[1]])];
-    const ws2 = XLSX.utils.aoa_to_sheet(dRows);
-    ws2['!cols'] = [{ wch: 14 }, { wch: 10 }];
-    XLSX.utils.book_append_sheet(wb, ws2, '各行政區統計');
+        var vCounts = tally(records, function(r){return r.visitor;});
+        var ws3 = XLSX.utils.aoa_to_sheet([['訪視人員','訪視次數']].concat(sortDesc(vCounts).map(function(x){return [x[0],x[1]];})));
+        ws3['!cols'] = [{wch:14},{wch:10}];
+        XLSX.utils.book_append_sheet(wb, ws3, '訪視人員統計');
 
-    // ── 工作表3：訪視人員統計 ──
-    const vCounts = tally(records, r => r.visitor);
-    const vRows = [['訪視人員', '訪視次數'], ...sortDesc(vCounts).map(x => [x[0], x[1]])];
-    const ws3 = XLSX.utils.aoa_to_sheet(vRows);
-    ws3['!cols'] = [{ wch: 14 }, { wch: 10 }];
-    XLSX.utils.book_append_sheet(wb, ws3, '訪視人員統計');
+        var mCounts = tally(records, function(r){return (r.date||'').slice(0,7);});
+        var mSorted = Object.entries(mCounts).filter(function(x){return x[0];}).sort(function(a,b){return a[0].localeCompare(b[0]);});
+        var ws4 = XLSX.utils.aoa_to_sheet([['年月','訪視次數']].concat(mSorted));
+        ws4['!cols'] = [{wch:12},{wch:10}];
+        XLSX.utils.book_append_sheet(wb, ws4, '每月趨勢');
 
-    // ── 工作表4：每月訪視趨勢 ──
-    const mCounts = tally(records, r => (r.date||'').slice(0, 7));
-    const mRows = [['年月', '訪視次數'], ...Object.entries(mCounts).filter(x=>x[0]).sort((a,b)=>a[0].localeCompare(b[0]))];
-    const ws4 = XLSX.utils.aoa_to_sheet(mRows);
-    ws4['!cols'] = [{ wch: 12 }, { wch: 10 }];
-    XLSX.utils.book_append_sheet(wb, ws4, '每月趨勢');
+        var pCounts = tally(records, function(r){return r.purpose;});
+        var ws5 = XLSX.utils.aoa_to_sheet([['訪視目的','次數']].concat(sortDesc(pCounts).map(function(x){return [x[0],x[1]];})));
+        ws5['!cols'] = [{wch:22},{wch:8}];
+        XLSX.utils.book_append_sheet(wb, ws5, '訪視目的分布');
 
-    // ── 工作表5：訪視目的分布 ──
-    const pCounts = tally(records, r => r.purpose);
-    const pRows = [['訪視目的', '次數'], ...sortDesc(pCounts).map(x => [x[0], x[1]])];
-    const ws5 = XLSX.utils.aoa_to_sheet(pRows);
-    ws5['!cols'] = [{ wch: 22 }, { wch: 8 }];
-    XLSX.utils.book_append_sheet(wb, ws5, '訪視目的分布');
+        var cMap = {};
+        records.forEach(function(r) {
+            var key = r.district+'||'+r.community;
+            if (!cMap[key]) cMap[key] = {district:r.district, community:r.community, count:0};
+            cMap[key].count++;
+        });
+        var cRows = Object.values(cMap).sort(function(a,b){return b.count-a.count;}).map(function(c){return [c.district,c.community,c.count];});
+        var ws6 = XLSX.utils.aoa_to_sheet([['行政區','社區名稱','訪視次數']].concat(cRows));
+        ws6['!cols'] = [{wch:12},{wch:20},{wch:10}];
+        XLSX.utils.book_append_sheet(wb, ws6, '觸及社區清單');
 
-    // ── 工作表6：觸及社區清單 ──
-    const cMap = {};
-    records.forEach(r => {
-        const key = r.district + '||' + r.community;
-        if (!cMap[key]) cMap[key] = { district: r.district, community: r.community, count: 0 };
-        cMap[key].count++;
+        XLSX.writeFile(wb, '訪視統計報表_'+today()+'.xlsx');
     });
-    const cRows = [['行政區', '社區名稱', '訪視次數'],
-        ...Object.values(cMap).sort((a,b) => b.count - a.count).map(c => [c.district, c.community, c.count])
-    ];
-    const ws6 = XLSX.utils.aoa_to_sheet(cRows);
-    ws6['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 10 }];
-    XLSX.utils.book_append_sheet(wb, ws6, '觸及社區清單');
-
-    XLSX.writeFile(wb, `訪視統計報表_${today()}.xlsx`);
 }
 
-/* ── 統計 ── */
-const chartInstances = {};
-const PIE_COLORS = [
-    '#4472c4','#ed7d31','#a9d18e','#ffc000','#5b9bd5',
-    '#70ad47','#ff0000','#7030a0','#00b0f0','#92d050','#ff7c80'
-];
+/* ── 統計圖表 ── */
+var chartInstances = {};
+var PIE_COLORS = ['#4472c4','#ed7d31','#a9d18e','#ffc000','#5b9bd5','#70ad47','#ff0000','#7030a0','#00b0f0','#92d050','#ff7c80'];
 
-async function renderStats() {
-    const records = await getRecords();
+function renderStats() {
+    getRecords().then(function(records) {
+        document.getElementById('s-total').textContent = records.length;
+        document.getElementById('s-districts').textContent = new Set(records.map(function(r){return r.district;})).size;
+        document.getElementById('s-visitors').textContent = new Set(records.map(function(r){return r.visitor;})).size;
+        document.getElementById('s-communities').textContent = new Set(records.map(function(r){return r.district+'_'+r.community;})).size;
 
-    // 數字卡
-    document.getElementById('s-total').textContent     = records.length;
-    document.getElementById('s-districts').textContent = new Set(records.map(r => r.district)).size;
-    document.getElementById('s-visitors').textContent  = new Set(records.map(r => r.visitor)).size;
-    document.getElementById('s-communities').textContent = new Set(records.map(r => r.district + '_' + r.community)).size;
+        var dCounts = tally(records, function(r){return r.district;});
+        var dSorted = sortDesc(dCounts);
+        renderBarChart('chart-district', dSorted.map(function(x){return x[0];}), dSorted.map(function(x){return x[1];}), '訪視次數', '#4472c4', '#c5d5f5');
 
-    // 各行政區（長條）
-    const dCounts = tally(records, r => r.district);
-    const dSorted = sortDesc(dCounts);
-    renderBarChart('chart-district', dSorted.map(x=>x[0]), dSorted.map(x=>x[1]), '訪視次數', '#4472c4', '#c5d5f5');
+        var vCounts = tally(records, function(r){return r.visitor;});
+        var vSorted = sortDesc(vCounts).slice(0,10);
+        renderBarChart('chart-visitor', vSorted.map(function(x){return x[0];}), vSorted.map(function(x){return x[1];}), '訪視次數', '#70ad47', '#c8e6c9');
 
-    // 訪視人員（長條）
-    const vCounts = tally(records, r => r.visitor);
-    const vSorted = sortDesc(vCounts).slice(0,10);
-    renderBarChart('chart-visitor', vSorted.map(x=>x[0]), vSorted.map(x=>x[1]), '訪視次數', '#70ad47', '#c8e6c9');
+        var mCounts = tally(records, function(r){return (r.date||'').slice(0,7);});
+        var mSorted = Object.entries(mCounts).filter(function(x){return x[0];}).sort(function(a,b){return a[0].localeCompare(b[0]);});
+        renderLineChart('chart-month', mSorted.map(function(x){return x[0];}), mSorted.map(function(x){return x[1];}));
 
-    // 每月趨勢（折線）
-    const mCounts = tally(records, r => (r.date||'').slice(0,7));
-    const mSorted = Object.entries(mCounts).filter(x=>x[0]).sort((a,b)=>a[0].localeCompare(b[0]));
-    renderLineChart('chart-month', mSorted.map(x=>x[0]), mSorted.map(x=>x[1]));
+        var pCounts = tally(records, function(r){return r.purpose;});
+        var pSorted = sortDesc(pCounts);
+        renderPieChart('chart-purpose', pSorted.map(function(x){return x[0];}), pSorted.map(function(x){return x[1];}));
 
-    // 訪視目的（圓餅）
-    const pCounts = tally(records, r => r.purpose);
-    const pSorted = sortDesc(pCounts);
-    renderPieChart('chart-purpose', pSorted.map(x=>x[0]), pSorted.map(x=>x[1]));
-
-    // 觸及社區清單
-    renderCommunityList(records);
+        renderCommunityList(records);
+    });
 }
 
 function renderBarChart(id, labels, data, label, borderColor, bgColor) {
     if (chartInstances[id]) chartInstances[id].destroy();
     chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
-        type: 'bar',
-        data: { labels, datasets: [{ label, data, backgroundColor: bgColor, borderColor, borderWidth: 2 }] },
+        type: 'bar', data: { labels: labels, datasets: [{ label: label, data: data, backgroundColor: bgColor, borderColor: borderColor, borderWidth: 2 }] },
         options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } }
     });
 }
-
 function renderLineChart(id, labels, data) {
     if (chartInstances[id]) chartInstances[id].destroy();
     chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
-        type: 'line',
-        data: { labels, datasets: [{ label: '訪視次數', data, backgroundColor: 'rgba(237,125,49,0.15)', borderColor: '#ed7d31', borderWidth: 2, fill: true, tension: 0.35, pointRadius: 4 }] },
+        type: 'line', data: { labels: labels, datasets: [{ label: '訪視次數', data: data, backgroundColor: 'rgba(237,125,49,0.15)', borderColor: '#ed7d31', borderWidth: 2, fill: true, tension: 0.35, pointRadius: 4 }] },
         options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } }
     });
 }
-
 function renderPieChart(id, labels, data) {
     if (chartInstances[id]) chartInstances[id].destroy();
     chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
         type: 'pie',
-        data: {
-            labels,
-            datasets: [{ data, backgroundColor: PIE_COLORS.slice(0, labels.length), borderColor: '#fff', borderWidth: 2 }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 10, boxWidth: 14 } },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.label}：${ctx.parsed} 次` } }
-            }
-        }
+        data: { labels: labels, datasets: [{ data: data, backgroundColor: PIE_COLORS.slice(0, labels.length), borderColor: '#fff', borderWidth: 2 }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 10, boxWidth: 14 } }, tooltip: { callbacks: { label: function(ctx) { return ' '+ctx.label+'：'+ctx.parsed+' 次'; } } } } }
     });
 }
-
 function renderCommunityList(records) {
-    // 以「行政區_社區名」為 key，統計訪視次數
-    const map = {};
-    records.forEach(r => {
-        const key = r.district + '||' + r.community;
+    var map = {};
+    records.forEach(function(r) {
+        var key = r.district+'||'+r.community;
         if (!map[key]) map[key] = { district: r.district, community: r.community, count: 0 };
         map[key].count++;
     });
-    const list = Object.values(map).sort((a,b) => b.count - a.count);
-    const el = document.getElementById('community-list');
-    if (list.length === 0) {
-        el.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">尚無資料</div>'; return;
-    }
-    el.innerHTML = list.map(item => `
-        <div class="community-item">
-            <div>
-                <div class="community-name">${esc(item.community)}</div>
-                <div class="community-district">${esc(item.district)}</div>
-            </div>
-            <span class="community-count">${item.count} 次</span>
-        </div>`).join('');
+    var list = Object.values(map).sort(function(a,b){return b.count-a.count;});
+    var el = document.getElementById('community-list');
+    if (!list.length) { el.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">尚無資料</div>'; return; }
+    el.innerHTML = list.map(function(item) {
+        return '<div class="community-item">'
+            +'<div><div class="community-name">'+esc(item.community)+'</div><div class="community-district">'+esc(item.district)+'</div></div>'
+            +'<span class="community-count">'+item.count+' 次</span></div>';
+    }).join('');
 }
 
 function tally(arr, keyFn) {
-    return arr.reduce((acc, r) => { const k = keyFn(r); acc[k] = (acc[k]||0) + 1; return acc; }, {});
+    return arr.reduce(function(acc, r) { var k = keyFn(r); acc[k] = (acc[k]||0)+1; return acc; }, {});
 }
-function sortDesc(obj) { return Object.entries(obj).sort((a,b) => b[1]-a[1]); }
+function sortDesc(obj) { return Object.entries(obj).sort(function(a,b){return b[1]-a[1];}); }
 
-function showToast(msg, isErr = false) {
-    const t = document.getElementById('toast');
+function showToast(msg, isErr) {
+    var t = document.getElementById('toast');
     t.textContent = msg;
     t.style.background = isErr ? '#c62828' : '#2e7d32';
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2600);
+    setTimeout(function() { t.classList.remove('show'); }, 2600);
 }
 </script>
 </body>
