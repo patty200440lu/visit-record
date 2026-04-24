@@ -11,61 +11,36 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif; background: #f0f2f5; color: #333; }
 
-        .header {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white; padding: 22px 30px;
-        }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 22px 30px; }
         .header h1 { font-size: 22px; }
         .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
 
-        .nav {
-            background: white; border-bottom: 1px solid #dde3f0;
-            display: flex; padding: 0 30px; position: sticky; top: 0; z-index: 100;
-        }
-        .nav-btn {
-            padding: 14px 24px; border: none; background: none; cursor: pointer;
-            font-size: 15px; color: #666; border-bottom: 3px solid transparent;
-            font-family: inherit; transition: all 0.2s;
-        }
+        .nav { background: white; border-bottom: 1px solid #dde3f0; display: flex; padding: 0 30px; position: sticky; top: 0; z-index: 100; }
+        .nav-btn { padding: 14px 24px; border: none; background: none; cursor: pointer; font-size: 15px; color: #666; border-bottom: 3px solid transparent; font-family: inherit; transition: all 0.2s; }
         .nav-btn.active { color: #2a5298; border-bottom-color: #2a5298; font-weight: 700; }
         .nav-btn:hover { color: #2a5298; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
-
         .section { display: none; }
         .section.active { display: block; }
 
-        .card {
-            background: white; border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 28px; margin-bottom: 20px;
-        }
-        .card h2 {
-            font-size: 17px; color: #1e3c72; margin-bottom: 20px;
-            padding-bottom: 12px; border-bottom: 2px solid #e8f0fe;
-        }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 28px; margin-bottom: 20px; }
+        .card h2 { font-size: 17px; color: #1e3c72; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e8f0fe; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group.full { grid-column: 1 / -1; }
         .form-group label { font-size: 13px; font-weight: 600; color: #444; }
         .required { color: #e53935; margin-left: 2px; }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             padding: 9px 13px; border: 1.5px solid #ddd; border-radius: 8px;
             font-size: 14px; font-family: inherit; transition: border-color 0.2s; color: #333;
         }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus { outline: none; border-color: #2a5298; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2a5298; }
         .form-group textarea { resize: vertical; min-height: 85px; }
         .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
 
-        .btn {
-            padding: 9px 22px; border: none; border-radius: 8px;
-            cursor: pointer; font-size: 14px; font-weight: 600;
-            font-family: inherit; transition: all 0.18s;
-        }
+        .btn { padding: 9px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; transition: all 0.18s; }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-primary { background: #2a5298; color: white; }
         .btn-primary:hover:not(:disabled) { background: #1e3c72; }
@@ -75,137 +50,81 @@
         .btn-success:hover { background: #1b5e20; }
         .btn-export { background: #1565c0; color: white; }
         .btn-export:hover { background: #0d47a1; }
-        .btn-del {
-            background: #ffebee; color: #c62828; border: 1px solid #ef9a9a;
-            padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer;
-            font-family: inherit; font-weight: 600;
-        }
+        .btn-del { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; }
         .btn-del:hover { background: #ffcdd2; }
-        .btn-feedback {
-            background: #fff8e1; color: #f57f17; border: 1px solid #ffe082;
-            padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer;
-            font-family: inherit; font-weight: 600; transition: all 0.18s;
-        }
+        .btn-feedback { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 600; transition: all 0.18s; }
         .btn-feedback:hover { background: #fff3cd; }
-        .btn-feedback.has-feedback {
-            background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7;
-        }
+        .btn-feedback.has-feedback { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
         .btn-feedback.has-feedback:hover { background: #dcedc8; }
 
         .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
-        .toolbar input, .toolbar select {
-            padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 8px;
-            font-size: 14px; font-family: inherit;
-        }
+        .toolbar input, .toolbar select { padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
         .toolbar input { flex: 1; min-width: 180px; }
         .record-count { margin-left: auto; font-size: 13px; color: #888; }
 
         .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
-        th {
-            background: #eef2ff; color: #2a3a6b; font-size: 13px;
-            padding: 11px 12px; text-align: left;
-            border-bottom: 2px solid #c5d0f0; white-space: nowrap;
-        }
+        th { background: #eef2ff; color: #2a3a6b; font-size: 13px; padding: 11px 12px; text-align: left; border-bottom: 2px solid #c5d0f0; white-space: nowrap; }
         td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
         tr:hover td { background: #f8faff; }
         .cell-wrap { max-width: 160px; }
         .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
         .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
-        .feedback-preview {
-            font-size: 12px; color: #2e7d32; margin-top: 4px;
-            background: #f1f8f1; border-radius: 4px; padding: 3px 7px;
-            max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        .feedback-preview { font-size: 12px; color: #2e7d32; margin-top: 4px; background: #f1f8f1; border-radius: 4px; padding: 3px 7px; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* ── Modal ── */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(10,20,40,0.5); z-index: 200;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(3px);
-        }
-        .modal-overlay.active { display: flex; }
-        .modal {
-            background: white; border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(26,77,110,0.18);
-            width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
-            animation: slideUp .22s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
-        }
-        .modal-head {
-            padding: 18px 22px 14px;
-            border-bottom: 1.5px solid #eee;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; background: white; z-index: 1;
-        }
-        .modal-head h3 { font-size: 16px; color: #1e3c72; }
-        .modal-close {
-            width: 30px; height: 30px; border-radius: 50%;
-            border: none; background: #f0f0f0; cursor: pointer;
-            font-size: 15px; display: flex; align-items: center; justify-content: center;
-            color: #666; transition: background .15s;
-        }
-        .modal-close:hover { background: #ddd; }
-        .modal-body { padding: 20px 22px; }
-        .modal-foot {
-            padding: 14px 22px;
-            border-top: 1.5px solid #eee;
-            display: flex; justify-content: flex-end; gap: 10px;
-            position: sticky; bottom: 0; background: white;
-        }
-
-        .record-summary {
-            background: #f4f7ff; border-radius: 8px; padding: 12px 14px;
-            margin-bottom: 16px; font-size: 13px; line-height: 1.9;
-        }
-        .record-summary strong { color: #2a5298; }
-        .record-summary .row { display: flex; gap: 8px; }
-        .record-summary .label { color: #888; min-width: 70px; flex-shrink: 0; }
-
-        .existing-feedback {
-            background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px;
-            padding: 12px 14px; margin-bottom: 14px;
-        }
-        .existing-feedback .ef-label {
-            font-size: 11px; font-weight: 700; color: #2e7d32;
-            letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px;
-        }
-        .existing-feedback .ef-time { font-size: 11px; color: #888; margin-top: 6px; }
-        .existing-feedback .ef-text { font-size: 13px; color: #333; line-height: 1.6; white-space: pre-wrap; }
-
-        .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-        .stat-card {
-            background: white; border-radius: 12px; padding: 20px 16px;
-            text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        }
+        /* ── Stats ── */
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px 16px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
         .stat-card .num { font-size: 38px; font-weight: 700; color: #2a5298; line-height: 1; }
         .stat-card .lbl { font-size: 13px; color: #777; margin-top: 6px; }
 
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .chart-card {
-            background: white; border-radius: 12px; padding: 22px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        }
+        .chart-card { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
         .chart-card.full { grid-column: 1 / -1; }
         .chart-card h3 { font-size: 15px; color: #1e3c72; margin-bottom: 16px; }
+        .pie-wrap { max-width: 300px; margin: 0 auto; }
 
-        .toast {
-            position: fixed; bottom: 28px; right: 28px;
-            color: white; padding: 12px 20px;
-            border-radius: 8px; font-size: 14px; z-index: 9999;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        /* 社區清單 */
+        .community-list-wrap { max-height: 300px; overflow-y: auto; }
+        .community-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px; border-radius: 6px; margin-bottom: 4px;
+            background: #f4f7ff; font-size: 13px;
         }
+        .community-item:hover { background: #e8f0fe; }
+        .community-name { font-weight: 600; color: #1e3c72; }
+        .community-district { font-size: 11px; color: #888; margin-top: 2px; }
+        .community-count { background: #2a5298; color: white; border-radius: 12px; padding: 2px 9px; font-size: 12px; font-weight: 700; }
+
+        /* ── Modal ── */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,40,0.5); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 14px; box-shadow: 0 8px 32px rgba(26,77,110,0.18); width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; animation: slideUp .22s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-head { padding: 18px 22px 14px; border-bottom: 1.5px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
+        .modal-head h3 { font-size: 16px; color: #1e3c72; }
+        .modal-close { width: 30px; height: 30px; border-radius: 50%; border: none; background: #f0f0f0; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; color: #666; transition: background .15s; }
+        .modal-close:hover { background: #ddd; }
+        .modal-body { padding: 20px 22px; }
+        .modal-foot { padding: 14px 22px; border-top: 1.5px solid #eee; display: flex; justify-content: flex-end; gap: 10px; position: sticky; bottom: 0; background: white; }
+
+        .record-summary { background: #f4f7ff; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.9; }
+        .record-summary strong { color: #2a5298; }
+        .record-summary .row { display: flex; gap: 8px; }
+        .record-summary .label { color: #888; min-width: 70px; flex-shrink: 0; }
+
+        .existing-feedback { background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; }
+        .existing-feedback .ef-label { font-size: 11px; font-weight: 700; color: #2e7d32; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+        .existing-feedback .ef-time { font-size: 11px; color: #888; margin-top: 6px; }
+        .existing-feedback .ef-text { font-size: 13px; color: #333; line-height: 1.6; white-space: pre-wrap; }
+
+        .toast { position: fixed; bottom: 28px; right: 28px; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; }
 
         @media (max-width: 700px) {
             .form-grid, .charts-grid { grid-template-columns: 1fr; }
-            .stat-row { grid-template-columns: 1fr; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
             .chart-card.full { grid-column: 1; }
             .container { padding: 14px 12px; }
             .nav-btn { padding: 12px 14px; font-size: 13px; }
@@ -329,17 +248,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>日期</th>
-                            <th>時間</th>
-                            <th>訪視人員</th>
-                            <th>行政區</th>
-                            <th>社區名稱</th>
-                            <th>社區能力級別</th>
-                            <th>訪視目的</th>
-                            <th>訪視內容摘要</th>
-                            <th>後續追蹤事項</th>
-                            <th>督導回饋</th>
-                            <th>操作</th>
+                            <th>日期</th><th>時間</th><th>訪視人員</th><th>行政區</th>
+                            <th>社區名稱</th><th>社區能力級別</th><th>訪視目的</th>
+                            <th>訪視內容摘要</th><th>後續追蹤事項</th><th>督導回饋</th><th>操作</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -363,6 +274,10 @@
                 <div class="num" id="s-visitors">—</div>
                 <div class="lbl">訪視人員數</div>
             </div>
+            <div class="stat-card">
+                <div class="num" id="s-communities">—</div>
+                <div class="lbl">觸及社區總數</div>
+            </div>
         </div>
         <div class="charts-grid">
             <div class="chart-card full">
@@ -376,6 +291,16 @@
             <div class="chart-card">
                 <h3>每月訪視趨勢</h3>
                 <canvas id="chart-month"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>訪視目的分布</h3>
+                <div class="pie-wrap">
+                    <canvas id="chart-purpose"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>觸及社區清單</h3>
+                <div class="community-list-wrap" id="community-list"></div>
             </div>
         </div>
     </div>
@@ -410,21 +335,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── Supabase 初始化 ── */
 const { createClient } = window.supabase;
 const db = createClient(
     'https://yrqzaxhdssihuwimzxcx.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycXpheGhkc3NpaHV3aW16eGN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNDc2OTEsImV4cCI6MjA5MDcyMzY5MX0.VTcdJCO9bLPR73EosorHJyA3JuL-C7dAd9tpZG8JOzs'
 );
 
-/* ── 行政區下拉 ── */
 const DISTRICTS = [
     '板橋區','三重區','中和區','永和區','新莊區','新店區','樹林區','鶯歌區',
     '三峽區','淡水區','汐止區','瑞芳區','土城區','蘆洲區','五股區','泰山區',
     '林口區','深坑區','石碇區','坪林區','三芝區','石門區','八里區',
     '平溪區','雙溪區','貢寮區','金山區','萬里區','烏來區'
 ];
-const distSel   = document.getElementById('f-district');
+const distSel = document.getElementById('f-district');
 const filterSel = document.getElementById('filterDistrict');
 DISTRICTS.forEach(d => {
     distSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
@@ -435,26 +358,20 @@ const now = new Date();
 document.getElementById('f-date').value = now.toISOString().split('T')[0];
 document.getElementById('f-time').value = now.toTimeString().slice(0, 5);
 
-/* ── 資料庫讀取 ── */
 async function getRecords() {
-    const { data, error } = await db
-        .from('visit_records')
-        .select('*')
-        .order('date', { ascending: false })
-        .order('time', { ascending: false });
+    const { data, error } = await db.from('visit_records').select('*')
+        .order('date', { ascending: false }).order('time', { ascending: false });
     if (error) { showToast('讀取資料失敗：' + error.message, true); return []; }
     return data || [];
 }
 
-/* ── 表單送出 ── */
 document.getElementById('visitForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     const required = ['f-date','f-time','f-visitor','f-district','f-community','f-level','f-purpose','f-summary'];
     for (const id of required) {
         if (!document.getElementById(id).value.trim()) {
             showToast('請填寫所有必填欄位', true);
-            document.getElementById(id).focus();
-            return;
+            document.getElementById(id).focus(); return;
         }
     }
     const record = {
@@ -468,13 +385,10 @@ document.getElementById('visitForm').addEventListener('submit', async function (
         summary:   document.getElementById('f-summary').value.trim(),
         followup:  document.getElementById('f-followup').value.trim(),
     };
-
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = '儲存中…';
-
     const { error } = await db.from('visit_records').insert([record]);
     btn.disabled = false; btn.textContent = '儲存紀錄';
-
     if (error) { showToast('儲存失敗：' + error.message, true); return; }
     showToast('訪視紀錄已成功儲存！');
     resetForm();
@@ -487,7 +401,6 @@ function resetForm() {
     document.getElementById('f-time').value = n.toTimeString().slice(0, 5);
 }
 
-/* ── 導覽 ── */
 function showSection(name, btn) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -497,16 +410,13 @@ function showSection(name, btn) {
     if (name === 'stats')   renderStats();
 }
 
-/* ── 紀錄列表 ── */
 async function renderTable() {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '<tr><td colspan="11" class="no-data">載入中…</td></tr>';
-
     const records  = await getRecords();
     const search   = document.getElementById('searchInput').value.toLowerCase();
     const dist     = document.getElementById('filterDistrict').value;
     const fbFilter = document.getElementById('filterFeedback').value;
-
     const filtered = records.filter(r => {
         const ok_s = !search ||
             (r.visitor||'').toLowerCase().includes(search)   ||
@@ -514,44 +424,29 @@ async function renderTable() {
             (r.purpose||'').toLowerCase().includes(search)   ||
             (r.summary||'').toLowerCase().includes(search);
         const ok_d = !dist || r.district === dist;
-        const ok_f = !fbFilter ||
-            (fbFilter === 'has'  && r.feedback) ||
-            (fbFilter === 'none' && !r.feedback);
+        const ok_f = !fbFilter || (fbFilter === 'has' && r.feedback) || (fbFilter === 'none' && !r.feedback);
         return ok_s && ok_d && ok_f;
     });
-
     document.getElementById('recordCount').textContent = `共 ${filtered.length} 筆`;
-
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>';
-        return;
+        tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>'; return;
     }
-
     tbody.innerHTML = filtered.map(r => {
         const hasFb = !!r.feedback;
         const fbCell = hasFb
             ? `<div class="feedback-preview" title="${esc(r.feedback)}">✅ ${esc(r.feedback)}</div>`
             : `<span style="color:#bbb;font-size:12px;">⏳ 待回饋</span>`;
-        return `
-        <tr>
-            <td>${r.date}</td>
-            <td>${r.time}</td>
-            <td>${esc(r.visitor)}</td>
-            <td>${esc(r.district)}</td>
-            <td>${esc(r.community)}</td>
-            <td>${esc(r.level || '')}</td>
+        return `<tr>
+            <td>${r.date}</td><td>${r.time}</td><td>${esc(r.visitor)}</td>
+            <td>${esc(r.district)}</td><td>${esc(r.community)}</td><td>${esc(r.level||'')}</td>
             <td>${esc(r.purpose)}</td>
             <td class="cell-wrap">${esc(r.summary)}</td>
             <td class="cell-wrap">${r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>'}</td>
             <td>${fbCell}</td>
-            <td>
-                <div class="td-actions">
-                    <button class="btn-feedback ${hasFb ? 'has-feedback' : ''}" onclick="openFeedback(${r.id})">
-                        ${hasFb ? '✏️ 編輯回饋' : '💬 給回饋'}
-                    </button>
-                    <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
-                </div>
-            </td>
+            <td><div class="td-actions">
+                <button class="btn-feedback ${hasFb?'has-feedback':''}" onclick="openFeedback(${r.id})">${hasFb?'✏️ 編輯回饋':'💬 給回饋'}</button>
+                <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
+            </div></td>
         </tr>`;
     }).join('');
 }
@@ -560,12 +455,11 @@ async function deleteRecord(id) {
     if (!confirm('確定要刪除這筆紀錄嗎？')) return;
     const { error } = await db.from('visit_records').delete().eq('id', id);
     if (error) { showToast('刪除失敗', true); return; }
-    showToast('紀錄已刪除');
-    renderTable();
+    showToast('紀錄已刪除'); renderTable();
 }
 
 function esc(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 /* ── 回饋 Modal ── */
@@ -575,15 +469,12 @@ async function openFeedback(id) {
     currentFeedbackId = id;
     const { data, error } = await db.from('visit_records').select('*').eq('id', id).single();
     if (error || !data) { showToast('無法載入紀錄', true); return; }
-
     document.getElementById('fb-summary').innerHTML = `
         <div class="row"><span class="label">訪視人員</span><strong>${esc(data.visitor)}</strong></div>
         <div class="row"><span class="label">日期時間</span>${data.date} ${data.time}</div>
         <div class="row"><span class="label">地點</span>${esc(data.district)} ／ ${esc(data.community)}</div>
         <div class="row"><span class="label">訪視目的</span>${esc(data.purpose)}</div>
-        <div class="row"><span class="label">內容摘要</span>${esc(data.summary)}</div>
-    `;
-
+        <div class="row"><span class="label">內容摘要</span>${esc(data.summary)}</div>`;
     const existingDiv = document.getElementById('fb-existing');
     if (data.feedback) {
         existingDiv.style.display = '';
@@ -597,7 +488,6 @@ async function openFeedback(id) {
         document.getElementById('fb-input-label').textContent = '督導回饋內容';
         document.getElementById('fb-input').value = '';
     }
-
     document.getElementById('feedbackModal').classList.add('active');
     setTimeout(() => document.getElementById('fb-input').focus(), 300);
 }
@@ -610,21 +500,14 @@ function closeFeedback() {
 async function saveFeedback() {
     const text = document.getElementById('fb-input').value.trim();
     if (!text) { showToast('請填寫回饋內容', true); return; }
-
     const btn = document.getElementById('fb-save-btn');
     btn.disabled = true; btn.textContent = '儲存中…';
-
     const { error } = await db.from('visit_records').update({
-        feedback:    text,
-        feedback_at: new Date().toISOString()
+        feedback: text, feedback_at: new Date().toISOString()
     }).eq('id', currentFeedbackId);
-
     btn.disabled = false; btn.textContent = '💾 儲存回饋';
-
     if (error) { showToast('儲存失敗：' + error.message, true); return; }
-    showToast('督導回饋已儲存！');
-    closeFeedback();
-    renderTable();
+    showToast('督導回饋已儲存！'); closeFeedback(); renderTable();
 }
 
 document.getElementById('feedbackModal').addEventListener('click', function(e) {
@@ -637,13 +520,12 @@ async function getExportData() {
     return records.map(r => ({
         '日期': r.date, '時間': r.time, '訪視人員': r.visitor,
         '行政區': r.district, '社區名稱': r.community,
-        '社區能力級別': r.level || '', '訪視目的': r.purpose,
-        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup || '',
-        '督導回饋': r.feedback || '',
+        '社區能力級別': r.level||'', '訪視目的': r.purpose,
+        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup||'',
+        '督導回饋': r.feedback||'',
         '回饋時間': r.feedback_at ? new Date(r.feedback_at).toLocaleString('zh-TW') : ''
     }));
 }
-
 async function exportExcel() {
     const data = await getExportData();
     if (!data.length) { alert('目前沒有資料可匯出'); return; }
@@ -653,7 +535,6 @@ async function exportExcel() {
     XLSX.utils.book_append_sheet(wb, ws, '訪視紀錄');
     XLSX.writeFile(wb, `訪視紀錄_${today()}.xlsx`);
 }
-
 async function exportCSV() {
     const data = await getExportData();
     if (!data.length) { alert('目前沒有資料可匯出'); return; }
@@ -666,62 +547,112 @@ async function exportCSV() {
     });
     a.click();
 }
-
 function today() { return new Date().toISOString().split('T')[0]; }
 
 /* ── 統計 ── */
 const chartInstances = {};
+const PIE_COLORS = [
+    '#4472c4','#ed7d31','#a9d18e','#ffc000','#5b9bd5',
+    '#70ad47','#ff0000','#7030a0','#00b0f0','#92d050','#ff7c80'
+];
 
 async function renderStats() {
     const records = await getRecords();
+
+    // 數字卡
     document.getElementById('s-total').textContent     = records.length;
     document.getElementById('s-districts').textContent = new Set(records.map(r => r.district)).size;
     document.getElementById('s-visitors').textContent  = new Set(records.map(r => r.visitor)).size;
+    document.getElementById('s-communities').textContent = new Set(records.map(r => r.district + '_' + r.community)).size;
 
+    // 各行政區（長條）
     const dCounts = tally(records, r => r.district);
     const dSorted = sortDesc(dCounts);
-    renderChart('chart-district', 'bar',
-        dSorted.map(x => x[0]), dSorted.map(x => x[1]), '訪視次數', '#4472c4', '#c5d5f5');
+    renderBarChart('chart-district', dSorted.map(x=>x[0]), dSorted.map(x=>x[1]), '訪視次數', '#4472c4', '#c5d5f5');
 
+    // 訪視人員（長條）
     const vCounts = tally(records, r => r.visitor);
-    const vSorted = sortDesc(vCounts).slice(0, 10);
-    renderChart('chart-visitor', 'bar',
-        vSorted.map(x => x[0]), vSorted.map(x => x[1]), '訪視次數', '#70ad47', '#c8e6c9');
+    const vSorted = sortDesc(vCounts).slice(0,10);
+    renderBarChart('chart-visitor', vSorted.map(x=>x[0]), vSorted.map(x=>x[1]), '訪視次數', '#70ad47', '#c8e6c9');
 
-    const mCounts = tally(records, r => (r.date || '').slice(0, 7));
-    const mSorted = Object.entries(mCounts).filter(x => x[0]).sort((a,b) => a[0].localeCompare(b[0]));
-    renderChart('chart-month', 'line',
-        mSorted.map(x => x[0]), mSorted.map(x => x[1]), '訪視次數', '#ed7d31', 'rgba(237,125,49,0.15)');
+    // 每月趨勢（折線）
+    const mCounts = tally(records, r => (r.date||'').slice(0,7));
+    const mSorted = Object.entries(mCounts).filter(x=>x[0]).sort((a,b)=>a[0].localeCompare(b[0]));
+    renderLineChart('chart-month', mSorted.map(x=>x[0]), mSorted.map(x=>x[1]));
+
+    // 訪視目的（圓餅）
+    const pCounts = tally(records, r => r.purpose);
+    const pSorted = sortDesc(pCounts);
+    renderPieChart('chart-purpose', pSorted.map(x=>x[0]), pSorted.map(x=>x[1]));
+
+    // 觸及社區清單
+    renderCommunityList(records);
 }
 
-function tally(arr, keyFn) {
-    return arr.reduce((acc, r) => {
-        const k = keyFn(r); acc[k] = (acc[k] || 0) + 1; return acc;
-    }, {});
-}
-function sortDesc(obj) {
-    return Object.entries(obj).sort((a,b) => b[1] - a[1]);
-}
-function renderChart(id, type, labels, data, label, borderColor, bgColor) {
+function renderBarChart(id, labels, data, label, borderColor, bgColor) {
     if (chartInstances[id]) chartInstances[id].destroy();
     chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
-        type,
+        type: 'bar',
+        data: { labels, datasets: [{ label, data, backgroundColor: bgColor, borderColor, borderWidth: 2 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } }
+    });
+}
+
+function renderLineChart(id, labels, data) {
+    if (chartInstances[id]) chartInstances[id].destroy();
+    chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: '訪視次數', data, backgroundColor: 'rgba(237,125,49,0.15)', borderColor: '#ed7d31', borderWidth: 2, fill: true, tension: 0.35, pointRadius: 4 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } }
+    });
+}
+
+function renderPieChart(id, labels, data) {
+    if (chartInstances[id]) chartInstances[id].destroy();
+    chartInstances[id] = new Chart(document.getElementById(id).getContext('2d'), {
+        type: 'pie',
         data: {
             labels,
-            datasets: [{
-                label, data, backgroundColor: bgColor, borderColor,
-                borderWidth: 2, fill: type === 'line', tension: 0.35, pointRadius: 4
-            }]
+            datasets: [{ data, backgroundColor: PIE_COLORS.slice(0, labels.length), borderColor: '#fff', borderWidth: 2 }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } }
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 10, boxWidth: 14 } },
+                tooltip: { callbacks: { label: ctx => ` ${ctx.label}：${ctx.parsed} 次` } }
+            }
         }
     });
 }
 
-/* ── Toast ── */
+function renderCommunityList(records) {
+    // 以「行政區_社區名」為 key，統計訪視次數
+    const map = {};
+    records.forEach(r => {
+        const key = r.district + '||' + r.community;
+        if (!map[key]) map[key] = { district: r.district, community: r.community, count: 0 };
+        map[key].count++;
+    });
+    const list = Object.values(map).sort((a,b) => b.count - a.count);
+    const el = document.getElementById('community-list');
+    if (list.length === 0) {
+        el.innerHTML = '<div style="color:#aaa;text-align:center;padding:20px;">尚無資料</div>'; return;
+    }
+    el.innerHTML = list.map(item => `
+        <div class="community-item">
+            <div>
+                <div class="community-name">${esc(item.community)}</div>
+                <div class="community-district">${esc(item.district)}</div>
+            </div>
+            <span class="community-count">${item.count} 次</span>
+        </div>`).join('');
+}
+
+function tally(arr, keyFn) {
+    return arr.reduce((acc, r) => { const k = keyFn(r); acc[k] = (acc[k]||0) + 1; return acc; }, {});
+}
+function sortDesc(obj) { return Object.entries(obj).sort((a,b) => b[1]-a[1]); }
+
 function showToast(msg, isErr = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
