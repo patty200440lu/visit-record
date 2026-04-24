@@ -77,9 +77,20 @@
         .btn-export:hover { background: #0d47a1; }
         .btn-del {
             background: #ffebee; color: #c62828; border: 1px solid #ef9a9a;
-            padding: 5px 12px; font-size: 12px; border-radius: 6px;
+            padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer;
+            font-family: inherit; font-weight: 600;
         }
         .btn-del:hover { background: #ffcdd2; }
+        .btn-feedback {
+            background: #fff8e1; color: #f57f17; border: 1px solid #ffe082;
+            padding: 5px 12px; font-size: 12px; border-radius: 6px; cursor: pointer;
+            font-family: inherit; font-weight: 600; transition: all 0.18s;
+        }
+        .btn-feedback:hover { background: #fff3cd; }
+        .btn-feedback.has-feedback {
+            background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7;
+        }
+        .btn-feedback.has-feedback:hover { background: #dcedc8; }
 
         .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
         .toolbar input, .toolbar select {
@@ -90,7 +101,7 @@
         .record-count { margin-left: auto; font-size: 13px; color: #888; }
 
         .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
         th {
             background: #eef2ff; color: #2a3a6b; font-size: 13px;
             padding: 11px 12px; text-align: left;
@@ -98,8 +109,74 @@
         }
         td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
         tr:hover td { background: #f8faff; }
-        .cell-wrap { max-width: 180px; }
+        .cell-wrap { max-width: 160px; }
         .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
+        .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .feedback-preview {
+            font-size: 12px; color: #2e7d32; margin-top: 4px;
+            background: #f1f8f1; border-radius: 4px; padding: 3px 7px;
+            max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(10,20,40,0.5); z-index: 200;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white; border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(26,77,110,0.18);
+            width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+            animation: slideUp .22s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .modal-head {
+            padding: 18px 22px 14px;
+            border-bottom: 1.5px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: white; z-index: 1;
+        }
+        .modal-head h3 { font-size: 16px; color: #1e3c72; }
+        .modal-close {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: none; background: #f0f0f0; cursor: pointer;
+            font-size: 15px; display: flex; align-items: center; justify-content: center;
+            color: #666; transition: background .15s;
+        }
+        .modal-close:hover { background: #ddd; }
+        .modal-body { padding: 20px 22px; }
+        .modal-foot {
+            padding: 14px 22px;
+            border-top: 1.5px solid #eee;
+            display: flex; justify-content: flex-end; gap: 10px;
+            position: sticky; bottom: 0; background: white;
+        }
+
+        .record-summary {
+            background: #f4f7ff; border-radius: 8px; padding: 12px 14px;
+            margin-bottom: 16px; font-size: 13px; line-height: 1.9;
+        }
+        .record-summary strong { color: #2a5298; }
+        .record-summary .row { display: flex; gap: 8px; }
+        .record-summary .label { color: #888; min-width: 70px; flex-shrink: 0; }
+
+        .existing-feedback {
+            background: #f1f8f1; border: 1px solid #c8e6c9; border-radius: 8px;
+            padding: 12px 14px; margin-bottom: 14px;
+        }
+        .existing-feedback .ef-label {
+            font-size: 11px; font-weight: 700; color: #2e7d32;
+            letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px;
+        }
+        .existing-feedback .ef-time { font-size: 11px; color: #888; margin-top: 6px; }
+        .existing-feedback .ef-text { font-size: 13px; color: #333; line-height: 1.6; white-space: pre-wrap; }
 
         .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
         .stat-card {
@@ -239,6 +316,11 @@
                 <select id="filterDistrict" onchange="renderTable()">
                     <option value="">全部行政區</option>
                 </select>
+                <select id="filterFeedback" onchange="renderTable()">
+                    <option value="">全部狀態</option>
+                    <option value="has">✅ 已有回饋</option>
+                    <option value="none">⏳ 待回饋</option>
+                </select>
                 <span class="record-count" id="recordCount"></span>
                 <button class="btn btn-success" onclick="exportExcel()">⬇ 匯出 Excel</button>
                 <button class="btn btn-export" onclick="exportCSV()">⬇ 匯出 CSV</button>
@@ -256,7 +338,8 @@
                             <th>訪視目的</th>
                             <th>訪視內容摘要</th>
                             <th>後續追蹤事項</th>
-                            <th></th>
+                            <th>督導回饋</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -298,6 +381,32 @@
     </div>
 </div>
 
+<!-- ── 回饋 Modal ── -->
+<div class="modal-overlay" id="feedbackModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>💬 督導回饋</h3>
+            <button class="modal-close" onclick="closeFeedback()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="record-summary" id="fb-summary"></div>
+            <div class="existing-feedback" id="fb-existing" style="display:none;">
+                <div class="ef-label">📝 目前的督導回饋</div>
+                <div class="ef-text" id="fb-existing-text"></div>
+                <div class="ef-time" id="fb-existing-time"></div>
+            </div>
+            <div class="form-group">
+                <label id="fb-input-label">督導回饋內容</label>
+                <textarea id="fb-input" rows="5" placeholder="請填寫對本次訪視紀錄的回饋或建議…"></textarea>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-secondary" onclick="closeFeedback()">取消</button>
+            <button class="btn btn-primary" id="fb-save-btn" onclick="saveFeedback()">💾 儲存回饋</button>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -322,7 +431,6 @@ DISTRICTS.forEach(d => {
     filterSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`);
 });
 
-// 預設今日日期與時間
 const now = new Date();
 document.getElementById('f-date').value = now.toISOString().split('T')[0];
 document.getElementById('f-time').value = now.toTimeString().slice(0, 5);
@@ -362,13 +470,10 @@ document.getElementById('visitForm').addEventListener('submit', async function (
     };
 
     const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.textContent = '儲存中…';
+    btn.disabled = true; btn.textContent = '儲存中…';
 
     const { error } = await db.from('visit_records').insert([record]);
-
-    btn.disabled = false;
-    btn.textContent = '儲存紀錄';
+    btn.disabled = false; btn.textContent = '儲存紀錄';
 
     if (error) { showToast('儲存失敗：' + error.message, true); return; }
     showToast('訪視紀錄已成功儲存！');
@@ -395,11 +500,12 @@ function showSection(name, btn) {
 /* ── 紀錄列表 ── */
 async function renderTable() {
     const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '<tr><td colspan="10" class="no-data">載入中…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="no-data">載入中…</td></tr>';
 
-    const records = await getRecords();
-    const search  = document.getElementById('searchInput').value.toLowerCase();
-    const dist    = document.getElementById('filterDistrict').value;
+    const records  = await getRecords();
+    const search   = document.getElementById('searchInput').value.toLowerCase();
+    const dist     = document.getElementById('filterDistrict').value;
+    const fbFilter = document.getElementById('filterFeedback').value;
 
     const filtered = records.filter(r => {
         const ok_s = !search ||
@@ -408,16 +514,25 @@ async function renderTable() {
             (r.purpose||'').toLowerCase().includes(search)   ||
             (r.summary||'').toLowerCase().includes(search);
         const ok_d = !dist || r.district === dist;
-        return ok_s && ok_d;
+        const ok_f = !fbFilter ||
+            (fbFilter === 'has'  && r.feedback) ||
+            (fbFilter === 'none' && !r.feedback);
+        return ok_s && ok_d && ok_f;
     });
 
     document.getElementById('recordCount').textContent = `共 ${filtered.length} 筆`;
 
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="no-data">目前沒有符合條件的紀錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>';
         return;
     }
-    tbody.innerHTML = filtered.map(r => `
+
+    tbody.innerHTML = filtered.map(r => {
+        const hasFb = !!r.feedback;
+        const fbCell = hasFb
+            ? `<div class="feedback-preview" title="${esc(r.feedback)}">✅ ${esc(r.feedback)}</div>`
+            : `<span style="color:#bbb;font-size:12px;">⏳ 待回饋</span>`;
+        return `
         <tr>
             <td>${r.date}</td>
             <td>${r.time}</td>
@@ -428,8 +543,17 @@ async function renderTable() {
             <td>${esc(r.purpose)}</td>
             <td class="cell-wrap">${esc(r.summary)}</td>
             <td class="cell-wrap">${r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>'}</td>
-            <td><button class="btn btn-del" onclick="deleteRecord(${r.id})">刪除</button></td>
-        </tr>`).join('');
+            <td>${fbCell}</td>
+            <td>
+                <div class="td-actions">
+                    <button class="btn-feedback ${hasFb ? 'has-feedback' : ''}" onclick="openFeedback(${r.id})">
+                        ${hasFb ? '✏️ 編輯回饋' : '💬 給回饋'}
+                    </button>
+                    <button class="btn-del" onclick="deleteRecord(${r.id})">刪除</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
 }
 
 async function deleteRecord(id) {
@@ -444,6 +568,69 @@ function esc(str) {
     return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+/* ── 回饋 Modal ── */
+let currentFeedbackId = null;
+
+async function openFeedback(id) {
+    currentFeedbackId = id;
+    const { data, error } = await db.from('visit_records').select('*').eq('id', id).single();
+    if (error || !data) { showToast('無法載入紀錄', true); return; }
+
+    document.getElementById('fb-summary').innerHTML = `
+        <div class="row"><span class="label">訪視人員</span><strong>${esc(data.visitor)}</strong></div>
+        <div class="row"><span class="label">日期時間</span>${data.date} ${data.time}</div>
+        <div class="row"><span class="label">地點</span>${esc(data.district)} ／ ${esc(data.community)}</div>
+        <div class="row"><span class="label">訪視目的</span>${esc(data.purpose)}</div>
+        <div class="row"><span class="label">內容摘要</span>${esc(data.summary)}</div>
+    `;
+
+    const existingDiv = document.getElementById('fb-existing');
+    if (data.feedback) {
+        existingDiv.style.display = '';
+        document.getElementById('fb-existing-text').textContent = data.feedback;
+        const t = data.feedback_at ? new Date(data.feedback_at).toLocaleString('zh-TW') : '';
+        document.getElementById('fb-existing-time').textContent = t ? `回饋時間：${t}` : '';
+        document.getElementById('fb-input-label').textContent = '修改回饋內容';
+        document.getElementById('fb-input').value = data.feedback;
+    } else {
+        existingDiv.style.display = 'none';
+        document.getElementById('fb-input-label').textContent = '督導回饋內容';
+        document.getElementById('fb-input').value = '';
+    }
+
+    document.getElementById('feedbackModal').classList.add('active');
+    setTimeout(() => document.getElementById('fb-input').focus(), 300);
+}
+
+function closeFeedback() {
+    document.getElementById('feedbackModal').classList.remove('active');
+    currentFeedbackId = null;
+}
+
+async function saveFeedback() {
+    const text = document.getElementById('fb-input').value.trim();
+    if (!text) { showToast('請填寫回饋內容', true); return; }
+
+    const btn = document.getElementById('fb-save-btn');
+    btn.disabled = true; btn.textContent = '儲存中…';
+
+    const { error } = await db.from('visit_records').update({
+        feedback:    text,
+        feedback_at: new Date().toISOString()
+    }).eq('id', currentFeedbackId);
+
+    btn.disabled = false; btn.textContent = '💾 儲存回饋';
+
+    if (error) { showToast('儲存失敗：' + error.message, true); return; }
+    showToast('督導回饋已儲存！');
+    closeFeedback();
+    renderTable();
+}
+
+document.getElementById('feedbackModal').addEventListener('click', function(e) {
+    if (e.target === this) closeFeedback();
+});
+
 /* ── 匯出 ── */
 async function getExportData() {
     const records = await getRecords();
@@ -451,7 +638,9 @@ async function getExportData() {
         '日期': r.date, '時間': r.time, '訪視人員': r.visitor,
         '行政區': r.district, '社區名稱': r.community,
         '社區能力級別': r.level || '', '訪視目的': r.purpose,
-        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup || ''
+        '訪視內容摘要': r.summary, '後續追蹤事項': r.followup || '',
+        '督導回饋': r.feedback || '',
+        '回饋時間': r.feedback_at ? new Date(r.feedback_at).toLocaleString('zh-TW') : ''
     }));
 }
 
@@ -459,7 +648,7 @@ async function exportExcel() {
     const data = await getExportData();
     if (!data.length) { alert('目前沒有資料可匯出'); return; }
     const ws = XLSX.utils.json_to_sheet(data);
-    ws['!cols'] = [10,8,10,8,14,12,18,30,20].map(w => ({ wch: w }));
+    ws['!cols'] = [10,8,10,8,14,12,18,30,20,30,18].map(w => ({ wch: w }));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, '訪視紀錄');
     XLSX.writeFile(wb, `訪視紀錄_${today()}.xlsx`);
