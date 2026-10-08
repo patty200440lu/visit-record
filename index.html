@@ -72,6 +72,7 @@
         td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
         tr:hover td { background: #f8faff; }
         .cell-wrap { max-width: 160px; }
+        .cell-summary { max-width: 280px; font-size: 12px; }
         .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
         .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .feedback-preview { font-size: 12px; color: #2e7d32; margin-top: 4px; background: #f1f8f1; border-radius: 4px; padding: 3px 7px; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -230,16 +231,16 @@
                 <span class="record-count" id="recordCount"></span>
                 <button class="btn btn-success" onclick="exportExcel()">⬇ 匯出 Excel</button>
                 <button class="btn btn-export" onclick="exportCSV()">⬇ 匯出 CSV</button>
-                <select id="exportMonth" style="min-width:120px;">
-                    <option value="">選擇月份…</option>
+                <select id="exportCommunity" style="min-width:160px;">
+                    <option value="">選擇社區…</option>
                 </select>
-                <button class="btn btn-word" onclick="exportWordByMonth()">📄 匯出月報 Word</button>
+                <button class="btn btn-word" onclick="exportWordByCommunity()">📄 匯出社區 Word</button>
             </div>
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
-                            <th>日期</th><th>時間</th><th>訪視人員</th><th>行政區</th>
+                            <th>日期</th><th>訪視人員</th><th>行政區</th>
                             <th>社區名稱</th><th>社區能力級別</th><th>訪視目的</th>
                             <th>訪視內容摘要</th><th>後續追蹤事項</th><th>督導回饋</th><th>操作</th>
                         </tr>
@@ -455,7 +456,7 @@ function showSection(name, btn) {
 /* ── 紀錄列表 ── */
 function renderTable() {
     var tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '<tr><td colspan="11" class="no-data">載入中…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="no-data">載入中…</td></tr>';
     getRecords().then(function(records) {
         var search   = document.getElementById('searchInput').value.toLowerCase();
         var dist     = document.getElementById('filterDistrict').value;
@@ -471,19 +472,19 @@ function renderTable() {
             return ok_s && ok_d && ok_f;
         });
         document.getElementById('recordCount').textContent = '共 ' + filtered.length + ' 筆';
-        populateMonthDropdown(records);
+        populateCommunityDropdown(records);
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="11" class="no-data">目前沒有符合條件的紀錄</td></tr>'; return;
+            tbody.innerHTML = '<tr><td colspan="10" class="no-data">目前沒有符合條件的紀錄</td></tr>'; return;
         }
         tbody.innerHTML = filtered.map(function(r) {
             var hasFb = !!r.feedback;
             var fbCell = hasFb
                 ? '<div class="feedback-preview" title="'+esc(r.feedback)+'">✅ '+esc(r.feedback)+'</div>'
                 : '<span style="color:#bbb;font-size:12px;">⏳ 待回饋</span>';
-            return '<tr><td>'+r.date+'</td><td>'+r.time+'</td><td>'+esc(r.visitor)+'</td>'
+            return '<tr><td>'+r.date+'</td><td>'+esc(r.visitor)+'</td>'
                 +'<td>'+esc(r.district)+'</td><td>'+esc(r.community)+'</td><td>'+esc(r.level||'')+'</td>'
                 +'<td>'+esc(r.purpose)+'</td>'
-                +'<td class="cell-wrap">'+esc(r.summary)+'</td>'
+                +'<td class="cell-summary">'+esc(r.summary)+'</td>'
                 +'<td class="cell-wrap">'+(r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>')+'</td>'
                 +'<td>'+fbCell+'</td>'
                 +'<td><div class="td-actions">'
@@ -619,35 +620,37 @@ document.getElementById('feedbackModal').addEventListener('click', function(e) {
     if (e.target === this) closeFeedback();
 });
 
-/* ── 月份下拉 ── */
-function populateMonthDropdown(records) {
-    var months = [];
+/* ── 社區下拉 ── */
+function populateCommunityDropdown(records) {
     var seen = {};
+    var items = [];
     records.forEach(function(r) {
-        var m = (r.date||'').slice(0,7);
-        if (m && !seen[m]) { seen[m] = true; months.push(m); }
+        var key = r.district + '_' + r.community;
+        if (!seen[key]) { seen[key] = true; items.push({ key: key, district: r.district, community: r.community }); }
     });
-    months.sort().reverse();
-    var sel = document.getElementById('exportMonth');
+    items.sort(function(a,b) { return a.district.localeCompare(b.district) || a.community.localeCompare(b.community); });
+    var sel = document.getElementById('exportCommunity');
     var cur = sel.value;
-    sel.innerHTML = '<option value="">選擇月份…</option>';
-    months.forEach(function(m) {
-        var parts = m.split('-');
-        sel.insertAdjacentHTML('beforeend', '<option value="'+m+'"'+(m===cur?' selected':'')+'>'+parts[0]+' 年 '+parseInt(parts[1])+' 月</option>');
+    sel.innerHTML = '<option value="">選擇社區…</option>';
+    items.forEach(function(item) {
+        sel.insertAdjacentHTML('beforeend', '<option value="'+item.key+'"'+(item.key===cur?' selected':'')+'>'+item.district+'　'+item.community+'</option>');
     });
 }
 
-/* ── 匯出 Word（HTML Blob 方式，Safari 相容）── */
-function exportWordByMonth() {
-    var month = document.getElementById('exportMonth').value;
-    if (!month) { showToast('請先選擇月份', true); return; }
+/* ── 匯出 Word（依社區，HTML Blob 方式，Safari 相容）── */
+function exportWordByCommunity() {
+    var key = document.getElementById('exportCommunity').value;
+    if (!key) { showToast('請先選擇社區', true); return; }
+    var firstUnder = key.indexOf('_');
+    var targetDistrict = key.slice(0, firstUnder);
+    var targetCommunity = key.slice(firstUnder + 1);
     getRecords().then(function(records) {
-        var filtered = records.filter(function(r) { return (r.date||'').indexOf(month) === 0; })
-                              .sort(function(a,b) { return (a.date+a.time).localeCompare(b.date+b.time); });
-        if (!filtered.length) { showToast('該月份沒有訪視紀錄', true); return; }
+        var filtered = records.filter(function(r) {
+            return r.district === targetDistrict && r.community === targetCommunity;
+        }).sort(function(a,b) { return (a.date+a.time).localeCompare(b.date+b.time); });
+        if (!filtered.length) { showToast('該社區沒有訪視紀錄', true); return; }
 
-        var parts = month.split('-');
-        var title = parts[0] + ' 年 ' + parseInt(parts[1]) + ' 月 訪視紀錄月報';
+        var title = targetDistrict + ' ' + targetCommunity + ' 訪視紀錄彙整';
         var makeRow = function(label, value) {
             return '<tr>'
                 + '<td style="background:#eef2ff;font-weight:bold;color:#2a5298;width:18%;padding:7px 10px;border:1px solid #c5d0f0;">'+label+'</td>'
@@ -657,9 +660,10 @@ function exportWordByMonth() {
         var body = filtered.map(function(r, idx) {
             return '<div style="margin-bottom:28px;">'
                 + '<p style="font-weight:bold;color:#1e3c72;font-size:15px;border-bottom:2px solid #2a5298;padding-bottom:4px;margin-bottom:8px;">'
-                + '【第 '+(idx+1)+' 筆】'+r.date+' '+r.time+'　'+r.district+' '+r.community+'</p>'
+                + '【第 '+(idx+1)+' 筆】'+r.date+'　'+r.visitor+'</p>'
                 + '<table style="width:100%;border-collapse:collapse;font-size:13px;">'
                 + makeRow('訪視人員', r.visitor)
+                + makeRow('日期', r.date)
                 + makeRow('行政區', r.district)
                 + makeRow('社區名稱', r.community)
                 + makeRow('社區能力級別', r.level||'—')
@@ -676,17 +680,17 @@ function exportWordByMonth() {
             + '<style>body{font-family:"Microsoft JhengHei",sans-serif;font-size:14px;margin:40px;} h1{text-align:center;color:#1e3c72;} p.sub{text-align:center;color:#666;margin-bottom:28px;}</style>'
             + '</head><body>'
             + '<h1>'+title+'</h1>'
-            + '<p class="sub">製表日期：'+new Date().toLocaleDateString('zh-TW')+'　　本月訪視筆數：'+filtered.length+' 筆</p>'
+            + '<p class="sub">製表日期：'+new Date().toLocaleDateString('zh-TW')+'　　訪視筆數：'+filtered.length+' 筆</p>'
             + body
             + '</body></html>';
 
         var blob = new Blob(['\ufeff'+html], { type: 'application/msword;charset=utf-8' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
-        a.href = url; a.download = '訪視月報_'+month+'.doc';
+        a.href = url; a.download = '訪視紀錄_'+targetDistrict+targetCommunity+'.doc';
         document.body.appendChild(a); a.click();
         document.body.removeChild(a); URL.revokeObjectURL(url);
-        showToast('📄 '+parts[0]+'年'+parseInt(parts[1])+'月月報已匯出！');
+        showToast('📄 '+targetCommunity+' 訪視紀錄已匯出！');
     });
 }
 
