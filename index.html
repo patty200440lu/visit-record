@@ -557,9 +557,7 @@ function saveEdit() {
     });
 }
 
-document.getElementById('editModal').addEventListener('click', function(e) {
-    if (e.target === this) closeEdit();
-});
+// editModal: click-outside disabled to prevent accidental close
 
 function deleteRecord(id) {
     if (!confirm('確定要刪除這筆紀錄嗎？')) return;
