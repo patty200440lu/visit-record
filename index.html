@@ -72,7 +72,8 @@
         td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
         tr:hover td { background: #f8faff; }
         .cell-wrap { max-width: 160px; }
-        .cell-summary { max-width: 280px; font-size: 12px; }
+        .cell-summary { max-width: 280px; }
+        .cell-summary-inner { font-size: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .no-data { text-align: center; padding: 48px 20px; color: #aaa; font-size: 15px; }
         .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .feedback-preview { font-size: 12px; color: #2e7d32; margin-top: 4px; background: #f1f8f1; border-radius: 4px; padding: 3px 7px; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -473,7 +474,7 @@ function renderTable() {
             return '<tr><td>'+r.date+'</td><td>'+esc(r.visitor)+'</td>'
                 +'<td>'+esc(r.district)+'</td><td>'+esc(r.community)+'</td><td>'+esc(r.level||'')+'</td>'
                 +'<td>'+esc(r.purpose)+'</td>'
-                +'<td class="cell-summary">'+esc(r.summary)+'</td>'
+                +'<td class="cell-summary"><div class="cell-summary-inner">'+esc(r.summary)+'</div></td>'
                 +'<td class="cell-wrap">'+(r.followup ? esc(r.followup) : '<span style="color:#bbb">—</span>')+'</td>'
                 +'<td>'+fbCell+'</td>'
                 +'<td><div class="td-actions">'
