@@ -383,8 +383,51 @@ DISTRICTS.forEach(function(d) {
     document.getElementById('e-district').insertAdjacentHTML('beforeend', '<option value="'+d+'">'+d+'</option>');
 });
 
-var nowD = new Date();
-document.getElementById('f-date').value = nowD.toISOString().split('T')[0];
+/* ── 本地日期與時間（避免早上 8 點前變成前一天）── */
+function localDate() {
+    var d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split('T')[0];
+}
+function localTime() { return new Date().toTimeString().slice(0, 5); }
+
+document.getElementById('f-date').value = localDate();
+
+/* ── 草稿自動保存（存在這台電腦的瀏覽器，送出成功後自動清除）── */
+var DRAFT_PREFIX = 'visit-draft:';
+var FORM_FIELDS = ['f-date','f-visitor','f-district','f-community','f-level','f-purpose','f-summary','f-followup'];
+var EDIT_FIELDS = ['e-date','e-visitor','e-district','e-community','e-level','e-purpose','e-summary','e-followup'];
+var FB_FIELDS   = ['fb-input'];
+
+function readFields(ids) {
+    var o = {};
+    ids.forEach(function(id) { o[id] = document.getElementById(id).value; });
+    return o;
+}
+function fillFields(o) {
+    Object.keys(o).forEach(function(id) { var el = document.getElementById(id); if (el) el.value = o[id]; });
+}
+function saveDraft(key, ids) {
+    try { localStorage.setItem(DRAFT_PREFIX + key, JSON.stringify({ data: readFields(ids), at: Date.now() })); } catch (e) {}
+}
+function loadDraft(key) {
+    try { var v = JSON.parse(localStorage.getItem(DRAFT_PREFIX + key)); return v && v.data ? v : null; } catch (e) { return null; }
+}
+function clearDraft(key) {
+    try { localStorage.removeItem(DRAFT_PREFIX + key); } catch (e) {}
+}
+function draftTime(d) { return new Date(d.at).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+
+// 新增表單：重新整理或不小心關掉分頁後，自動還原
+(function() {
+    var d = loadDraft('new');
+    if (d) { fillFields(d.data); setTimeout(function() { showToast('已還原 ' + draftTime(d) + ' 未送出的表單內容'); }, 300); }
+})();
+['input', 'change'].forEach(function(ev) {
+    document.getElementById('visitForm').addEventListener(ev, function() {
+        if (formHasContent()) saveDraft('new', FORM_FIELDS); else clearDraft('new');
+    });
+});
 
 /* ── DB ── */
 function getRecords() {
@@ -416,6 +459,7 @@ document.getElementById('visitForm').addEventListener('submit', function(e) {
         purpose:   document.getElementById('f-purpose').value,
         summary:   document.getElementById('f-summary').value.trim(),
         followup:  document.getElementById('f-followup').value.trim(),
+        time:      localTime(),
     };
     var btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = '儲存中…';
@@ -430,8 +474,8 @@ document.getElementById('visitForm').addEventListener('submit', function(e) {
 
 function resetForm() {
     document.getElementById('visitForm').reset();
-    var n = new Date();
-    document.getElementById('f-date').value = n.toISOString().split('T')[0];
+    document.getElementById('f-date').value = localDate();
+    clearDraft('new');
 }
 
 function formHasContent() {
@@ -443,7 +487,7 @@ function formHasContent() {
 }
 
 window.addEventListener('beforeunload', function(e) {
-    if (formHasContent()) {
+    if (formHasContent() || editDirty() || feedbackDirty()) {
         e.preventDefault();
         e.returnValue = '';
     }
@@ -507,9 +551,23 @@ function renderTable() {
 
 /* ── 編輯紀錄 ── */
 var currentEditId = null;
+var editOriginal = null;
+
+function editDirty() {
+    return currentEditId !== null && editOriginal !== null
+        && JSON.stringify(readFields(EDIT_FIELDS)) !== editOriginal;
+}
+
+['input', 'change'].forEach(function(ev) {
+    document.getElementById('editModal').addEventListener(ev, function() {
+        if (currentEditId === null) return;
+        if (editDirty()) saveDraft('edit-' + currentEditId, EDIT_FIELDS); else clearDraft('edit-' + currentEditId);
+    });
+});
 
 function openEdit(id) {
     currentEditId = id;
+    editOriginal = null;
     _supabase.from('visit_records').select('*').eq('id', id).single().then(function(res) {
         var data = res.data;
         if (res.error || !data) { showToast('無法載入紀錄', true); return; }
@@ -521,13 +579,21 @@ function openEdit(id) {
         document.getElementById('e-purpose').value  = data.purpose || '';
         document.getElementById('e-summary').value  = data.summary || '';
         document.getElementById('e-followup').value = data.followup || '';
+        editOriginal = JSON.stringify(readFields(EDIT_FIELDS));
+        var d = loadDraft('edit-' + id);
+        if (d) { fillFields(d.data); showToast('已還原 ' + draftTime(d) + ' 未儲存的修改'); }
         document.getElementById('editModal').classList.add('active');
     });
 }
 
-function closeEdit() {
+function closeEdit(force) {
+    if (force !== true && editDirty()) {
+        if (!confirm('修改內容尚未儲存，確定要放棄嗎？')) return;
+    }
+    if (currentEditId !== null) clearDraft('edit-' + currentEditId);
     document.getElementById('editModal').classList.remove('active');
     currentEditId = null;
+    editOriginal = null;
 }
 
 function saveEdit() {
@@ -553,7 +619,7 @@ function saveEdit() {
     _supabase.from('visit_records').update(updated).eq('id', currentEditId).then(function(res) {
         btn.disabled = false; btn.textContent = '💾 儲存修改';
         if (res.error) { showToast('儲存失敗：' + res.error.message, true); return; }
-        showToast('訪視紀錄已更新！'); closeEdit(); renderTable();
+        showToast('訪視紀錄已更新！'); closeEdit(true); renderTable();
     });
 }
 
@@ -573,9 +639,21 @@ function esc(str) {
 
 /* ── 回饋 Modal ── */
 var currentFeedbackId = null;
+var feedbackOriginal = null;
+
+function feedbackDirty() {
+    return currentFeedbackId !== null && feedbackOriginal !== null
+        && document.getElementById('fb-input').value !== feedbackOriginal;
+}
+
+document.getElementById('fb-input').addEventListener('input', function() {
+    if (currentFeedbackId === null) return;
+    if (feedbackDirty()) saveDraft('fb-' + currentFeedbackId, FB_FIELDS); else clearDraft('fb-' + currentFeedbackId);
+});
 
 function openFeedback(id) {
     currentFeedbackId = id;
+    feedbackOriginal = null;
     _supabase.from('visit_records').select('*').eq('id', id).single().then(function(res) {
         var data = res.data;
         if (res.error || !data) { showToast('無法載入紀錄', true); return; }
@@ -598,14 +676,22 @@ function openFeedback(id) {
             document.getElementById('fb-input-label').textContent = '督導回饋內容';
             document.getElementById('fb-input').value = '';
         }
+        feedbackOriginal = document.getElementById('fb-input').value;
+        var d = loadDraft('fb-' + id);
+        if (d) { fillFields(d.data); showToast('已還原 ' + draftTime(d) + ' 未儲存的回饋'); }
         document.getElementById('feedbackModal').classList.add('active');
         setTimeout(function() { document.getElementById('fb-input').focus(); }, 300);
     });
 }
 
-function closeFeedback() {
+function closeFeedback(force) {
+    if (force !== true && feedbackDirty()) {
+        if (!confirm('回饋內容尚未儲存，確定要放棄嗎？')) return;
+    }
+    if (currentFeedbackId !== null) clearDraft('fb-' + currentFeedbackId);
     document.getElementById('feedbackModal').classList.remove('active');
     currentFeedbackId = null;
+    feedbackOriginal = null;
 }
 
 function saveFeedback() {
@@ -617,13 +703,11 @@ function saveFeedback() {
         .eq('id', currentFeedbackId).then(function(res) {
             btn.disabled = false; btn.textContent = '💾 儲存回饋';
             if (res.error) { showToast('儲存失敗：' + res.error.message, true); return; }
-            showToast('督導回饋已儲存！'); closeFeedback(); renderTable();
+            showToast('督導回饋已儲存！'); closeFeedback(true); renderTable();
         });
 }
 
-document.getElementById('feedbackModal').addEventListener('click', function(e) {
-    if (e.target === this) closeFeedback();
-});
+// feedbackModal: click-outside disabled to prevent accidental close
 
 /* ── 社區下拉 ── */
 function populateCommunityDropdown(records) {
@@ -741,7 +825,7 @@ function exportCSV() {
     });
 }
 
-function today() { return new Date().toISOString().split('T')[0]; }
+function today() { return localDate(); }
 
 /* ── 匯出統計 Excel ── */
 function exportStatsExcel() {
